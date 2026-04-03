@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LabGreen — Agentes IA para tu negocio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #1a7a4a;
+    --green-mid: #22a063;
+    --green-light: #e8f5ee;
+    --green-dim: rgba(26,122,74,0.08);
+    --green-border: rgba(26,122,74,0.18);
+    --wa: #25D366;
+    --bg: #f9faf8;
+    --bg2: #f2f5f1;
+    --bg3: #ffffff;
+    --text: #1a2318;
+    --muted: #5a7060;
+    --card: #ffffff;
+    --border: rgba(0,0,0,0.07);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(249,250,248,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav svg { display: block; }
+  nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
+  nav ul li a {
+    color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav ul li a:hover { color: var(--green); }
+  .nav-cta {
+    background: var(--green) !important; color: #fff !important;
+    padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: var(--green-mid) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; width: 100%;
+    padding: 7rem 2rem 5rem;
+    background: #ffffff;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(26,122,74,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 820px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .hero-logo { margin-bottom: 2.5rem; display: flex; justify-content: center; } .hero-logo svg { width: 420px; height: auto; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #fff; border: 1px solid var(--green-border);
+    color: var(--green); padding: 0.45rem 1rem; border-radius: 20px;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; margin-bottom: 1.75rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .wa-dot {
+    width: 7px; height: 7px; background: var(--wa); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .hero h1 {
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+    font-weight: 800; line-height: 1.12;
+    color: var(--text); margin-bottom: 1.5rem;
+    letter-spacing: -0.025em;
+  }
+  .hero h1 em { font-style: normal; color: var(--green); }
+  .hero p {
+    font-size: 1.1rem; color: var(--muted);
+    max-width: 580px; margin: 0 auto 2.5rem; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--green); color: #fff;
+    padding: 0.85rem 2rem; border-radius: 10px;
+    font-weight: 600; font-size: 0.95rem; text-decoration: none;
+    transition: all 0.2s; box-shadow: 0 4px 16px rgba(26,122,74,0.25);
+  }
+  .btn-primary:hover { background: var(--green-mid); transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1.5px solid var(--green-border); color: var(--green);
+    background: #fff; padding: 0.85rem 2rem; border-radius: 10px;
+    font-weight: 600; font-size: 0.95rem; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--green-light); }
+
+  /* TICKER */
+  .ticker {
+    background: #fff; border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 0; overflow: hidden;
+  }
+  .ticker-inner { display: flex; gap: 3rem; animation: ticker 30s linear infinite; width: max-content; }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .ticker-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    white-space: nowrap; font-size: 0.83rem; color: var(--muted); font-weight: 500;
+  }
+  .ticker-item .dot { color: var(--green); font-size: 0.6rem; }
+
+  /* SECTIONS */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag {
+    display: inline-block; color: var(--green);
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-size: clamp(1.7rem, 3vw, 2.6rem);
+    font-weight: 800; line-height: 1.18; color: var(--text); margin-bottom: 1rem;
+  }
+  .section-title em { font-style: normal; color: var(--green); }
+  .section-sub { color: var(--muted); font-size: 1rem; max-width: 520px; line-height: 1.7; }
+
+  /* VALUE */
+  .value-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem; margin-top: 3.5rem;
+  }
+  .value-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem;
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .value-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.07); transform: translateY(-3px); }
+  .value-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--green-dim); display: flex; align-items: center;
+    justify-content: center; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .value-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+  .value-card p { font-size: 0.875rem; color: var(--muted); }
+
+  /* SOLUTIONS */
+  .solutions { background: var(--bg2); }
+  .sol-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem; margin-top: 3.5rem;
+  }
+  .sol-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .sol-card:hover { box-shadow: 0 10px 32px rgba(0,0,0,0.08); transform: translateY(-3px); }
+  .sol-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; display: inline-flex; align-items: center; gap: 0.35rem;
+    text-transform: uppercase; color: var(--green);
+    background: var(--green-dim); padding: 0.3rem 0.7rem; border-radius: 5px;
+    width: fit-content; border: 1px solid var(--green-border);
+  }
+  .sol-card h3 { font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text); }
+  .sol-card p { font-size: 0.875rem; color: var(--muted); flex: 1; }
+  .sol-features { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+  .sol-features li {
+    font-size: 0.85rem; color: var(--muted);
+    display: flex; align-items: flex-start; gap: 0.5rem;
+  }
+  .sol-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+  /* HOW */
+  .how-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0; margin-top: 4rem;
+  }
+  .how-step { text-align: center; padding: 2rem 1.5rem; position: relative; }
+  .how-step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -0.4rem; top: 2.6rem;
+    font-size: 1.2rem; color: var(--green-border);
+  }
+  .step-num {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--green-dim); border: 2px solid var(--green-border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 800;
+    color: var(--green); margin: 0 auto 1rem;
+  }
+  .how-step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+  .how-step p { font-size: 0.83rem; color: var(--muted); }
+
+  /* WA SECTION */
+  .wa-section { background: #fff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .wa-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .wa-phone {
+    background: #f0f2f0; border-radius: 24px; padding: 1.25rem;
+    border: 1px solid var(--border); max-width: 270px; margin: 0 auto;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+  }
+  .wa-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    border-bottom: 1px solid rgba(0,0,0,0.07); padding-bottom: 0.75rem; margin-bottom: 1rem;
+  }
+  .wa-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--wa);
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .wa-name { font-weight: 600; font-size: 0.88rem; color: var(--text); }
+  .wa-status { font-size: 0.7rem; color: var(--wa); }
+  .wa-msgs { display: flex; flex-direction: column; gap: 0.5rem; }
+  .msg { padding: 0.55rem 0.85rem; border-radius: 10px; font-size: 0.8rem; line-height: 1.45; max-width: 90%; }
+  .msg.user { background: #dcf8c6; align-self: flex-end; color: #1a3a1a; }
+  .msg.bot { background: #fff; color: var(--muted); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .msg-time { font-size: 0.63rem; color: var(--muted); text-align: right; margin-bottom: 0.2rem; }
+  .wa-text h2 { font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 1.9rem; font-weight: 800; margin-bottom: 1rem; color: var(--text); }
+  .wa-text h2 em { font-style: normal; color: var(--wa); }
+  .wa-text p { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+  .wa-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    background: var(--green-dim); border: 1px solid var(--green-border);
+    color: var(--green); font-size: 0.76rem; font-weight: 500;
+    padding: 0.3rem 0.75rem; border-radius: 20px;
+  }
+
+  /* MIGRATIONS */
+  .mig-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem; margin-top: 3rem;
+  }
+  .mig-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+    transition: all 0.3s;
+  }
+  .mig-card:hover { border-color: var(--green-border); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .mig-from { font-size: 0.78rem; color: #aaa; text-decoration: line-through; }
+  .mig-arrow { color: var(--green); font-size: 1rem; }
+  .mig-to { font-size: 1rem; font-weight: 700; color: var(--green); }
+  .mig-desc { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.55; }
+
+  /* CTA */
+  .cta-section { background: var(--green); text-align: center; }
+  .cta-box { max-width: 620px; margin: 0 auto; }
+  .cta-box h2 { font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 1rem; }
+  .cta-box p { color: rgba(255,255,255,0.75); margin-bottom: 2rem; font-size: 1rem; }
+  .btn-white {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #fff; color: var(--green);
+    padding: 0.9rem 2.2rem; border-radius: 10px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    transition: all 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+  .contact-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+  .contact-ico {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: var(--green-dim); border: 1px solid var(--green-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .contact-item h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; color: var(--text); }
+  .contact-item p { font-size: 0.875rem; color: var(--muted); }
+  form { display: flex; flex-direction: column; gap: 0.85rem; }
+  form input, form textarea {
+    background: #fff; border: 1px solid var(--border);
+    color: var(--text); padding: 0.8rem 1rem; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  form input:focus, form textarea:focus { border-color: var(--green); }
+  form textarea { resize: vertical; min-height: 110px; }
+  form input::placeholder, form textarea::placeholder { color: #bbb; }
+  form button {
+    background: var(--green); color: #fff; border: none;
+    padding: 0.85rem 2rem; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    transition: all 0.2s;
+  }
+  form button:hover { background: var(--green-mid); }
+
+  /* FOOTER */
+  footer {
+    background: var(--text); padding: 2.5rem 2rem; text-align: center;
+  }
+  footer svg { display: block; margin: 0 auto 0.75rem; opacity: 0.6; }
+  footer p { color: rgba(255,255,255,0.4); font-size: 0.82rem; }
+  footer a { color: rgba(255,255,255,0.4); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    nav ul { display: none; }
+    .wa-inner, .contact-grid { grid-template-columns: 1fr; }
+    .how-step:not(:last-child)::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 38" style="height:36px;width:auto">
+  <polygon points="19,2 32,10 32,26 19,34 6,26 6,10" fill="#e8f5ee"/>
+  <polygon points="19,7 29,13 29,25 19,31 9,25 9,13" fill="none" stroke="#1a7a4a" stroke-width="1.8"/>
+  <circle cx="19" cy="18" r="4" fill="#1a7a4a"/>
+  <line x1="19" y1="14" x2="19" y2="7"  stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="23" y1="16" x2="29" y2="13" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="23" y1="20" x2="29" y2="25" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="19" y1="22" x2="19" y2="31" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="15" y1="20" x2="9"  y2="25" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="15" y1="16" x2="9"  y2="13" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <circle cx="19" cy="2"  r="2.5" fill="#22c77a"/>
+  <circle cx="32" cy="10" r="2.5" fill="#22c77a"/>
+  <circle cx="32" cy="26" r="2.5" fill="#22c77a"/>
+  <circle cx="19" cy="34" r="2.5" fill="#22c77a"/>
+  <circle cx="6"  cy="26" r="2.5" fill="#22c77a"/>
+  <circle cx="6"  cy="10" r="2.5" fill="#22c77a"/>
+  <text x="42" y="24" font-family="DM Sans,system-ui,sans-serif" font-size="22"><tspan font-weight="300" fill="#1a2318">Lab</tspan><tspan font-weight="700" fill="#1a7a4a">Green</tspan></text>
+</svg>
+  <ul>
+    <li><a href="#soluciones">Soluciones</a></li>
+    <li><a href="#como">Cómo funciona</a></li>
+    <li><a href="#migraciones">Migraciones</a></li>
+    <li><a href="#contacto" class="nav-cta">Hablar con un agente</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-content" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 100" style="width:420px;max-width:90vw;margin-bottom:2rem">
+  <polygon points="45,4 78,23 78,61 45,80 12,61 12,23" fill="#e8f5ee"/>
+  <polygon points="45,14 71,29 71,55 45,70 19,55 19,29" fill="none" stroke="#1a7a4a" stroke-width="2.2"/>
+  <circle cx="45" cy="42" r="8" fill="#1a7a4a"/>
+  <line x1="45" y1="34" x2="45" y2="14" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="52" y1="38" x2="71" y2="29" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="52" y1="47" x2="71" y2="55" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="45" y1="50" x2="45" y2="70" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="38" y1="47" x2="19" y2="55" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="38" y1="38" x2="19" y2="29" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <circle cx="45" cy="4"  r="4" fill="#22c77a"/>
+  <circle cx="78" cy="23" r="4" fill="#22c77a"/>
+  <circle cx="78" cy="61" r="4" fill="#22c77a"/>
+  <circle cx="45" cy="80" r="4" fill="#22c77a"/>
+  <circle cx="12" cy="61" r="4" fill="#22c77a"/>
+  <circle cx="12" cy="23" r="4" fill="#22c77a"/>
+  <text x="100" y="55" font-family="DM Sans,system-ui,sans-serif" font-size="48"><tspan font-weight="300" fill="#1a2318">Lab</tspan><tspan font-weight="700" fill="#1a7a4a">Green</tspan></text>
+  <text x="101" y="76" font-family="system-ui,sans-serif" font-size="10.5" fill="#a0b8a8" letter-spacing="3">AGENTES IA · WHATSAPP</text>
+</svg>
+    <div class="hero-badge">
+      <div class="wa-dot"></div>
+      Agentes IA activos por WhatsApp
+    </div>
+    <h1>
+      Reemplaza tu software<br>
+      con <em>agentes inteligentes</em><br>
+      que viven en WhatsApp
+    </h1>
+    <p>
+      Construimos soluciones de IA a medida para empresas en Latinoamérica que automatizan CRM, gestión de propiedades y operaciones completas, sin apps nuevas ni capacitaciones.
+    </p>
+    <div class="hero-btns">
+      <a href="#contacto" class="btn-primary">Ver una demo</a>
+      <a href="#soluciones" class="btn-secondary">Explorar soluciones →</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span class="dot">●</span> CRM para PyMEs por WhatsApp</div>
+    <div class="ticker-item"><span class="dot">●</span> ConvivIA · Propiedad horizontal</div>
+    <div class="ticker-item"><span class="dot">●</span> Agentes IA a medida</div>
+    <div class="ticker-item"><span class="dot">●</span> Cobros y pagos por chat</div>
+    <div class="ticker-item"><span class="dot">●</span> Automatización de ventas</div>
+    <div class="ticker-item"><span class="dot">●</span> Soporte al cliente 24/7</div>
+    <div class="ticker-item"><span class="dot">●</span> SaaS con IA para LATAM</div>
+    <div class="ticker-item"><span class="dot">●</span> CRM para PyMEs por WhatsApp</div>
+    <div class="ticker-item"><span class="dot">●</span> ConvivIA · Propiedad horizontal</div>
+    <div class="ticker-item"><span class="dot">●</span> Agentes IA a medida</div>
+    <div class="ticker-item"><span class="dot">●</span> Cobros y pagos por chat</div>
+    <div class="ticker-item"><span class="dot">●</span> Automatización de ventas</div>
+    <div class="ticker-item"><span class="dot">●</span> Soporte al cliente 24/7</div>
+    <div class="ticker-item"><span class="dot">●</span> SaaS con IA para LATAM</div>
+  </div>
+</div>
+
+<section id="nosotros">
+  <div class="container">
+    <span class="section-tag">El laboratorio</span>
+    <h2 class="section-title">Un estudio de productos SaaS<br>construidos para <em>LATAM</em></h2>
+    <p class="section-sub">Cada producto que construimos nace de un problema real en Latinoamérica. IA + WhatsApp como plataforma, sin fricción para el usuario final.</p>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><polygon points="13,2 4,14 12,14 11,22 20,10 12,10" fill="var(--green)" opacity="0.9"/></svg></div>
+        <h3>Implementación rápida</h3>
+        <p>De cero a agente activo en semanas, no meses. Sin infraestructura compleja.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><rect x="2" y="3" width="16" height="11" rx="2" fill="var(--green)" opacity="0.9"/><rect x="6" y="10" width="16" height="11" rx="2" fill="var(--green)" opacity="0.35"/></svg></div>
+        <h3>WhatsApp como plataforma</h3>
+        <p>Tus clientes ya usan WhatsApp. Sin apps que instalar, sin curvas de aprendizaje.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><rect x="4" y="4" width="16" height="16" rx="2" fill="var(--green)" opacity="0.9" transform="rotate(45 12 12)"/><rect x="7" y="7" width="10" height="10" rx="1" fill="white" opacity="0.5" transform="rotate(45 12 12)"/><rect x="10" y="10" width="4" height="4" fill="var(--green)" transform="rotate(45 12 12)"/></svg></div>
+        <h3>Soluciones verticales</h3>
+        <p>Cada agente está entrenado para su industria: proptech, ventas, soporte.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M4 8 L12 2 L20 8 L16 8 L16 16 L8 16 L8 8 Z" fill="var(--green)" opacity="0.9"/><path d="M6 12 L6 20 L18 20 L18 12" stroke="var(--green)" stroke-width="2.5" fill="none" opacity="0.5"/></svg></div>
+        <h3>Reemplazamos sistemas viejos</h3>
+        <p>Migramos operaciones de herramientas obsoletas a tecnología moderna.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="soluciones" class="solutions">
+  <div class="container">
+    <span class="section-tag">Nuestros productos</span>
+    <h2 class="section-title">Tres líneas de producto,<br>un solo canal: <em>WhatsApp</em></h2>
+    <p class="section-sub">Cada producto resuelve un problema real de negocio en LATAM, con IA y sin fricción para el usuario.</p>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-tag"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><rect x="1" y="4" width="9" height="11"/><rect x="10" y="7" width="5" height="8"/><rect x="3" y="6" width="2" height="2" fill="white"/><rect x="6" y="6" width="2" height="2" fill="white"/><rect x="3" y="10" width="2" height="2" fill="white"/><rect x="6" y="10" width="2" height="2" fill="white"/></svg> Proptech</div>
+        <p>Gestión inteligente de propiedades horizontales. Administradores, residentes y consejo — comunicados por WhatsApp.</p>
+        <ul class="sol-features">
+          <li>Recaudo de cuotas y reportes automáticos</li>
+          <li>PQRS y comunicados sin correos perdidos</li>
+          <li>Reservas de zonas comunes en segundos</li>
+          <li>Votaciones y asambleas digitales</li>
+        </ul>
+        <a href="#" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.5rem;font-size:0.85rem;font-weight:600;color:var(--green);text-decoration:none;opacity:0.7;" title="Próximamente">Ver producto → <span style="font-size:0.7rem;background:var(--green-dim);border:1px solid var(--green-border);padding:0.1rem 0.4rem;border-radius:4px;color:var(--green);">Próximamente</span></a>
+      </div>
+      <div class="sol-card">
+        <div class="sol-tag"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><rect x="1" y="8" width="3" height="7"/><rect x="6" y="5" width="3" height="10"/><rect x="11" y="2" width="3" height="13"/></svg> CRM · PyMEs</div>
+        <h3>CRM por WhatsApp</h3>
+        <p>El CRM diseñado para comercios y pequeñas empresas de LATAM. Tus vendedores atienden, hacen seguimiento y cierran ventas sin salir del chat.</p>
+        <ul class="sol-features">
+          <li>Captura y calificación automática de leads</li>
+          <li>Catálogo de productos interactivo por chat</li>
+          <li>Cobros y links de pago desde WhatsApp</li>
+          <li>Pipeline de ventas en tiempo real</li>
+        </ul>
+      </div>
+      <div class="sol-card">
+        <div class="sol-tag"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><polygon points="8,1 15,5 15,11 8,15 1,11 1,5"/></svg> Automatización · Agentes</div>
+        <h3>Agentes IA a medida</h3>
+        <p>¿Tienes un proceso que consume tiempo de tu equipo? Lo convertimos en un agente IA que opera 24/7 por WhatsApp para cualquier industria.</p>
+        <ul class="sol-features">
+          <li>Soporte al cliente automatizado</li>
+          <li>Agendamiento y reservas por chat</li>
+          <li>Facturación y gestión documental</li>
+          <li>Cualquier SaaS con IA + WhatsApp</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wa-section">
+  <div class="container">
+    <div class="wa-inner">
+      <div class="wa-phone">
+        <div class="wa-header">
+          <div class="wa-avatar"><svg viewBox="0 0 24 24" width="18" height="18" fill="white"><polygon points="12,2 22,8 22,16 12,22 2,16 2,8"/></svg></div>
+          <div>
+            <div class="wa-name">Agente LabGreen</div>
+            <div class="wa-status">● En línea</div>
+          </div>
+        </div>
+        <div class="wa-msgs">
+          <div class="msg user">Hola, ¿cuánto debo de administración?</div>
+          <div class="msg-time">9:02 am ✓✓</div>
+          <div class="msg bot">¡Hola Carlos! 👋 Tienes <strong>$245.000</strong> pendientes — vence el <strong>5 de mayo</strong>.<br><br>¿Cómo deseas pagar?<br>1 · Tarjeta débito o crédito<br>2 · Código QR<br>3 · Pago inmediato (link)</div>
+          <div class="msg user">3, el link por favor</div>
+          <div class="msg-time">9:03 am ✓✓</div>
+          <div class="msg bot">Aquí tu link de pago seguro:<br><span style="color:#1a7a4a;text-decoration:underline;font-size:0.78rem">pay.convivia.app/carlos-apt302</span><br><br>Válido por 24 horas. ✅</div>
+          <div class="msg user">Listo, ya pagué</div>
+          <div class="msg bot">¡Pago confirmado! 🎉 Recibo enviado a tu correo. ¿En qué más te ayudo?</div>
+          <div class="msg-time">9:04 am ✓✓</div>
+        </div>
+      </div>
+      <div class="wa-text">
+        <span class="section-tag">WhatsApp primero</span>
+        <h2>Tu negocio donde<br>viven tus <em>clientes</em></h2>
+        <p>El 98% de los mensajes de WhatsApp se leen en los primeros 3 minutos. En Latinoamérica, tus clientes ya están en WhatsApp. Tu negocio también debería estarlo.</p>
+        <div class="wa-chips">
+          <span class="chip">Sin app que descargar</span>
+          <span class="chip">Disponible 24/7</span>
+          <span class="chip">Responde en segundos</span>
+          <span class="chip">Multiusuario</span>
+          <span class="chip">Integra tus sistemas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como">
+  <div class="container">
+    <span class="section-tag">Proceso</span>
+    <h2 class="section-title">Del diagnóstico al agente<br><em>activo en semanas</em></h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="step-num">01</div>
+        <h4>Diagnóstico</h4>
+        <p>Entendemos tu operación, cuellos de botella y herramientas actuales.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">02</div>
+        <h4>Diseño</h4>
+        <p>Diseñamos el agente y los flujos conversacionales para tu contexto.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">03</div>
+        <h4>Integración</h4>
+        <p>Conectamos con tus sistemas actuales y migramos la información.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-num">04</div>
+        <h4>Lanzamiento</h4>
+        <p>Piloto, ajustes finos y despliegue completo con soporte continuo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="migraciones" style="background: var(--bg2);">
+  <div class="container">
+    <span class="section-tag">Modernización</span>
+    <h2 class="section-title">Migramos tu operación<br>a <em>tecnología moderna</em></h2>
+    <p class="section-sub">¿Excel, software viejo o procesos manuales? Los reemplazamos con soluciones modernas conectadas a WhatsApp, sin perder datos ni contexto.</p>
+    <div class="mig-grid">
+      <div class="mig-card">
+        <div class="mig-from">Excel / Hojas de cálculo</div>
+        <div class="mig-arrow">→</div>
+        <div class="mig-to">Agente IA + Dashboard</div>
+        <div class="mig-desc">Reportes automáticos, sin fórmulas rotas ni archivos perdidos.</div>
+      </div>
+      <div class="mig-card">
+        <div class="mig-from">CRM desactualizado</div>
+        <div class="mig-arrow">→</div>
+        <div class="mig-to">CRM por WhatsApp</div>
+        <div class="mig-desc">Tu equipo opera desde el chat. Sin licencias costosas.</div>
+      </div>
+      <div class="mig-card">
+        <div class="mig-from">Software legado</div>
+        <div class="mig-arrow">→</div>
+        <div class="mig-to">Arquitectura moderna</div>
+        <div class="mig-desc">Bases de datos, APIs y flujos migrados a tecnologías actuales.</div>
+      </div>
+      <div class="mig-card">
+        <div class="mig-from">Procesos manuales</div>
+        <div class="mig-arrow">→</div>
+        <div class="mig-to">Automatización IA</div>
+        <div class="mig-desc">Lo que hacen 3 personas en 8 horas, el agente lo hace en segundos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>¿Tu negocio merece un <em>agente IA</em> propio?</h2>
+      <p>Cuéntanos tu caso — CRM, comunidades, o cualquier proceso. En 48 horas te mostramos cómo LabGreen puede transformarlo.</p>
+      <a href="#contacto" class="btn-white">Agendar diagnóstico gratis →</a>
+    </div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="container">
+    <span class="section-tag">Contacto</span>
+    <h2 class="section-title">Construyamos tu <em>próximo producto</em></h2>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-item">
+          <div class="contact-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" fill="var(--green)" opacity="0.15" stroke="var(--green)" stroke-width="1.5"/><polyline points="2,5 12,13 22,5" stroke="var(--green)" stroke-width="1.5" fill="none"/></svg></div>
+          <div><h3>Email</h3><p>samuel@labgreen.co</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none"><circle cx="12" cy="9" r="4" fill="var(--green)" opacity="0.2" stroke="var(--green)" stroke-width="1.5"/><path d="M12 2 C7.5 2 4 5.5 4 9 C4 14 12 22 12 22 C12 22 20 14 20 9 C20 5.5 16.5 2 12 2Z" stroke="var(--green)" stroke-width="1.5" fill="none"/><circle cx="12" cy="9" r="2" fill="var(--green)"/></svg></div>
+          <div><h3>Ubicación</h3><p>Colombia · México · Argentina · y toda Latinoamérica</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none"><rect x="2" y="2" width="14" height="10" rx="2" fill="var(--green)" opacity="0.15" stroke="var(--green)" stroke-width="1.5"/><rect x="8" y="9" width="14" height="10" rx="2" fill="var(--green)" opacity="0.1" stroke="var(--green)" stroke-width="1.5"/></svg></div>
+          <div><h3>WhatsApp</h3><p>Respuesta en menos de 24 horas</p></div>
+        </div>
+      </div>
+      <form onsubmit="handleSubmit(event)">
+        <input type="text" placeholder="Tu nombre" required />
+        <input type="email" placeholder="Correo electrónico" required />
+        <input type="text" placeholder="Empresa (opcional)" />
+        <textarea placeholder="¿CRM, ConvivIA, agente a medida? Cuéntanos tu idea..." required></textarea>
+        <button type="submit" id="submit-btn">Enviar mensaje →</button>
+        <div id="success-msg" style="display:none; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 8px; padding: 1rem; color: var(--green); text-align: center; font-weight: 600;">
+          ✅ ¡Mensaje enviado! Te contactamos pronto.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  
+  <p>© 2026 LabGreen · Todos los derechos reservados · <a href="#">Privacidad</a></p>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('success-msg').style.display = 'block';
+}
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.value-card, .sol-card, .mig-card, .how-step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
