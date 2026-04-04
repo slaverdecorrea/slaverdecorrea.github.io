@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LabGreen · SaaS con IA para LATAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a7a4a;--green-mid:#22a063;--green-light:#e8f5ee;
+  --green-dim:rgba(26,122,74,0.08);--green-border:rgba(26,122,74,0.18);
+  --wa:#25D366;--bg:#f9faf8;--bg2:#f2f5f1;--text:#1a2318;
+  --muted:#5a7060;--card:#ffffff;--border:rgba(0,0,0,0.07);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(249,250,248,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
+nav ul li a{color:var(--muted);text-decoration:none;font-size:0.9rem;font-weight:500;transition:color 0.2s}
+nav ul li a:hover{color:var(--green)}
+.nav-cta{background:var(--green)!important;color:#fff!important;padding:0.5rem 1.2rem;border-radius:8px;font-weight:600!important}
+.nav-cta:hover{background:var(--green-mid)!important}
+#lang-toggle{background:none;border:1.5px solid var(--green-border);color:var(--green);padding:0.35rem 0.85rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;transition:all 0.2s;margin-left:1rem}
+#lang-toggle:hover{background:var(--green-dim)}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 5rem;background:#fff;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(26,122,74,0.05) 0%,transparent 65%);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center}
+.hero-logo{margin-bottom:2rem;display:flex;justify-content:center}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:#fff;border:1px solid var(--green-border);color:var(--green);padding:0.5rem 1.2rem;border-radius:20px;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.75rem;box-shadow:0 2px 8px rgba(0,0,0,0.09)}
+.wa-dot{width:7px;height:7px;background:var(--wa);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3.2vw,2.8rem);font-weight:700;line-height:1.12;color:var(--text);margin-bottom:1.5rem;letter-spacing:-0.025em}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero p{font-size:1.1rem;color:var(--muted);max-width:580px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:0.5rem;background:var(--green);color:#fff;padding:0.85rem 2rem;border-radius:10px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 16px rgba(26,122,74,0.25)}
+.btn-primary:hover{background:var(--green-mid);transform:translateY(-1px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:0.5rem;border:1.5px solid var(--green-border);color:var(--green);background:#fff;padding:0.85rem 2rem;border-radius:10px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:all 0.2s}
+.btn-secondary:hover{background:var(--green-light)}
+.ticker{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0.85rem 0;overflow:hidden}
+.ticker-inner{display:flex;gap:3rem;animation:ticker 30s linear infinite;width:max-content}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:flex;align-items:center;gap:0.5rem;white-space:nowrap;font-size:0.83rem;color:var(--muted);font-weight:500}
+.ticker-item .dot{color:var(--green);font-size:0.6rem}
+section{padding:6rem 2rem}
+.container{max-width:1080px;margin:0 auto}
+.section-tag{display:inline-block;color:var(--green);font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.75rem}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3vw,2.6rem);font-weight:700;line-height:1.18;color:var(--text);margin-bottom:1rem}
+.section-title em{font-style:normal;color:var(--green)}
+.section-sub{color:var(--muted);font-size:1rem;max-width:520px;line-height:1.7}
+.value-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-top:3.5rem}
+.value-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.75rem;transition:box-shadow 0.3s,transform 0.3s}
+.value-card:hover{box-shadow:0 8px 28px rgba(0,0,0,0.07);transform:translateY(-3px)}
+.value-icon{width:44px;height:44px;border-radius:10px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.value-card h3{font-size:1rem;font-weight:600;margin-bottom:0.4rem}
+.value-card p{font-size:0.875rem;color:var(--muted)}
+.solutions{background:var(--bg2)}
+.sol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:3.5rem}
+.sol-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition:box-shadow 0.3s,transform 0.3s}
+.sol-card:hover{box-shadow:0 10px 32px rgba(0,0,0,0.08);transform:translateY(-3px)}
+.sol-tag{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);background:var(--green-dim);padding:0.3rem 0.7rem;border-radius:5px;width:fit-content;border:1px solid var(--green-border)}
+.sol-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700}
+.sol-card p{font-size:0.875rem;color:var(--muted);flex:1}
+.sol-features{list-style:none;display:flex;flex-direction:column;gap:0.45rem}
+.sol-features li{font-size:0.85rem;color:var(--muted);display:flex;align-items:flex-start;gap:0.5rem}
+.sol-features li::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.wa-section{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.wa-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.wa-phone{background:#f0f2f0;border-radius:24px;padding:1.25rem;border:1px solid var(--border);max-width:270px;margin:0 auto;box-shadow:0 8px 30px rgba(0,0,0,0.07)}
+.wa-header{display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(0,0,0,0.07);padding-bottom:0.75rem;margin-bottom:1rem}
+.wa-avatar{width:36px;height:36px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center}
+.wa-name{font-weight:600;font-size:0.88rem}
+.wa-status{font-size:0.7rem;color:var(--wa)}
+.wa-msgs{display:flex;flex-direction:column;gap:0.5rem}
+.msg{padding:0.55rem 0.85rem;border-radius:10px;font-size:0.8rem;line-height:1.45;max-width:90%}
+.msg.user{background:#dcf8c6;align-self:flex-end;color:#1a3a1a}
+.msg.bot{background:#fff;color:var(--muted);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.msg-time{font-size:0.63rem;color:var(--muted);text-align:right;margin-bottom:0.2rem}
+.wa-text h2{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;font-weight:700;margin-bottom:1rem}
+.wa-text h2 em{font-style:normal;color:var(--wa)}
+.wa-text p{color:var(--muted);margin-bottom:1.5rem;font-size:0.95rem}
+.wa-chips{display:flex;flex-wrap:wrap;gap:0.5rem}
+.chip{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-size:0.76rem;font-weight:500;padding:0.3rem 0.75rem;border-radius:20px}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:4rem}
+.how-step{text-align:center;padding:2rem 1.5rem;position:relative}
+.how-step:not(:last-child)::after{content:"→";position:absolute;right:-0.4rem;top:2.6rem;font-size:1.2rem;color:var(--green-border)}
+.step-num{width:52px;height:52px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:var(--green);margin:0 auto 1rem}
+.how-step h4{font-size:0.95rem;font-weight:600;margin-bottom:0.4rem}
+.how-step p{font-size:0.83rem;color:var(--muted)}
+.mig-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:3rem}
+.mig-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;gap:0.4rem;transition:all 0.3s}
+.mig-card:hover{border-color:var(--green-border);box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.mig-from{font-size:0.78rem;color:#aaa;text-decoration:line-through}
+.mig-arrow{color:var(--green);font-size:1rem}
+.mig-to{font-size:1rem;font-weight:700;color:var(--green)}
+.mig-desc{font-size:0.82rem;color:var(--muted);margin-top:0.2rem;line-height:1.55}
+.cta-section{background:var(--green);text-align:center}
+.cta-box{max-width:620px;margin:0 auto}
+.cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;color:#fff;margin-bottom:1rem}
+.cta-box h2 em{font-style:normal;color:rgba(255,255,255,0.75)}
+.cta-box p{color:rgba(255,255,255,0.75);margin-bottom:2rem}
+.btn-white{display:inline-flex;align-items:center;gap:0.5rem;background:#fff;color:var(--green);padding:0.9rem 2.2rem;border-radius:10px;font-weight:700;font-size:0.95rem;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.btn-white:hover{transform:translateY(-2px)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.contact-item{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem}
+.contact-ico{width:42px;height:42px;border-radius:10px;background:var(--green-dim);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.contact-item h3{font-size:0.95rem;font-weight:600;margin-bottom:0.2rem}
+.contact-item p{font-size:0.875rem;color:var(--muted)}
+form{display:flex;flex-direction:column;gap:0.85rem}
+form input,form textarea{background:#fff;border:1px solid var(--border);color:var(--text);padding:0.8rem 1rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:border-color 0.2s;outline:none}
+form input:focus,form textarea:focus{border-color:var(--green)}
+form textarea{resize:vertical;min-height:110px}
+form input::placeholder,form textarea::placeholder{color:#bbb}
+form button{background:var(--green);color:#fff;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+form button:hover{background:var(--green-mid)}
+footer{background:var(--text);padding:2.5rem 2rem;text-align:center}
+footer svg{display:block;margin:0 auto 0.75rem;opacity:0.5;filter:brightness(10)}
+footer p{color:rgba(255,255,255,0.4);font-size:0.82rem}
+footer a{color:rgba(255,255,255,0.4);text-decoration:none}
+@media(max-width:768px){nav ul{display:none}.wa-inner,.contact-grid{grid-template-columns:1fr}.how-step:not(:last-child)::after{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="display:flex;align-items:center;text-decoration:none;cursor:pointer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 38" style="height:36px;width:auto">
+  <polygon points="19,2 32,10 32,26 19,34 6,26 6,10" fill="#e8f5ee"/>
+  <polygon points="19,7 29,13 29,25 19,31 9,25 9,13" fill="none" stroke="#1a7a4a" stroke-width="1.8"/>
+  <circle cx="19" cy="18" r="4" fill="#1a7a4a"/>
+  <line x1="19" y1="14" x2="19" y2="7"  stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="23" y1="16" x2="29" y2="13" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="23" y1="20" x2="29" y2="25" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="19" y1="22" x2="19" y2="31" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="15" y1="20" x2="9"  y2="25" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="15" y1="16" x2="9"  y2="13" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <circle cx="19" cy="2"  r="2.5" fill="#22c77a"/>
+  <circle cx="32" cy="10" r="2.5" fill="#22c77a"/>
+  <circle cx="32" cy="26" r="2.5" fill="#22c77a"/>
+  <circle cx="19" cy="34" r="2.5" fill="#22c77a"/>
+  <circle cx="6"  cy="26" r="2.5" fill="#22c77a"/>
+  <circle cx="6"  cy="10" r="2.5" fill="#22c77a"/>
+  <text x="42" y="24" font-family="DM Sans,system-ui,sans-serif" font-size="22"><tspan font-weight="300" fill="#1a2318">Lab</tspan><tspan font-weight="700" fill="#1a7a4a">Green</tspan></text>
+</svg></a>
+  <ul>
+    <li><a href="#soluciones" id="nav-sol">Soluciones</a></li>
+    <li><a href="#como" id="nav-how">Cómo funciona</a></li>
+    <li><a href="#migraciones" id="nav-mig">Migraciones</a></li>
+    <li><a href="#contacto" class="nav-cta" id="nav-cta-btn">Hablar con un agente</a></li>
+  </ul>
+  <button id="lang-toggle">EN</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 100" style="width:420px;max-width:90vw;margin-bottom:2rem">
+  <polygon points="45,4 78,23 78,61 45,80 12,61 12,23" fill="#e8f5ee"/>
+  <polygon points="45,14 71,29 71,55 45,70 19,55 19,29" fill="none" stroke="#1a7a4a" stroke-width="2.2"/>
+  <circle cx="45" cy="42" r="8" fill="#1a7a4a"/>
+  <line x1="45" y1="34" x2="45" y2="14" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="52" y1="38" x2="71" y2="29" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="52" y1="47" x2="71" y2="55" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="45" y1="50" x2="45" y2="70" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="38" y1="47" x2="19" y2="55" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <line x1="38" y1="38" x2="19" y2="29" stroke="#1a7a4a" stroke-width="1.6" opacity="0.3"/>
+  <circle cx="45" cy="4"  r="4" fill="#22c77a"/>
+  <circle cx="78" cy="23" r="4" fill="#22c77a"/>
+  <circle cx="78" cy="61" r="4" fill="#22c77a"/>
+  <circle cx="45" cy="80" r="4" fill="#22c77a"/>
+  <circle cx="12" cy="61" r="4" fill="#22c77a"/>
+  <circle cx="12" cy="23" r="4" fill="#22c77a"/>
+  <text x="100" y="55" font-family="DM Sans,system-ui,sans-serif" font-size="48"><tspan font-weight="300" fill="#1a2318">Lab</tspan><tspan font-weight="700" fill="#1a7a4a">Green</tspan></text>
+  <text x="101" y="76" font-family="system-ui,sans-serif" font-size="10.5" fill="#a0b8a8" letter-spacing="3">AGENTES IA · WHATSAPP</text>
+</svg></div>
+    <div class="hero-badge"><div class="wa-dot"></div> <span id="badge-text">Agentes IA activos por WhatsApp</span></div>
+    <h1 id="hero-title">Soluciones SaaS con IA<br>que viven en <em>WhatsApp</em></h1>
+    <p id="hero-sub">Construimos productos de IA para LATAM: CRM para comercios, gestión de comunidades y automatización de procesos, todo operando desde WhatsApp.</p>
+    <div class="hero-btns">
+      <a href="#contacto" class="btn-primary" id="btn-demo">Ver una demo</a>
+      <a href="#soluciones" class="btn-secondary" id="btn-explore">Explorar soluciones →</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span class="dot">●</span> CRM para PyMEs por WhatsApp</div>
+    <div class="ticker-item"><span class="dot">●</span> ConvivIA · Propiedad horizontal</div>
+    <div class="ticker-item"><span class="dot">●</span> Agentes IA a medida</div>
+    <div class="ticker-item"><span class="dot">●</span> Cobros y pagos por chat</div>
+    <div class="ticker-item"><span class="dot">●</span> Automatización de ventas</div>
+    <div class="ticker-item"><span class="dot">●</span> Soporte al cliente 24/7</div>
+    <div class="ticker-item"><span class="dot">●</span> SaaS con IA para LATAM</div>
+    <div class="ticker-item"><span class="dot">●</span> CRM para PyMEs por WhatsApp</div>
+    <div class="ticker-item"><span class="dot">●</span> ConvivIA · Propiedad horizontal</div>
+    <div class="ticker-item"><span class="dot">●</span> Agentes IA a medida</div>
+    <div class="ticker-item"><span class="dot">●</span> Cobros y pagos por chat</div>
+    <div class="ticker-item"><span class="dot">●</span> Automatización de ventas</div>
+    <div class="ticker-item"><span class="dot">●</span> Soporte al cliente 24/7</div>
+    <div class="ticker-item"><span class="dot">●</span> SaaS con IA para LATAM</div>
+  </div>
+</div>
+
+<section id="nosotros">
+  <div class="container">
+    <span class="section-tag" id="tag-lab">El laboratorio</span>
+    <h2 class="section-title" id="title-lab">Un estudio de productos SaaS<br>construidos para <em>LATAM</em></h2>
+    <p class="section-sub" id="sub-lab">Cada producto que construimos nace de un problema real en Latinoamérica. IA + WhatsApp como plataforma, sin fricción para el usuario final.</p>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><polygon points="13,2 4,14 12,14 11,22 20,10 12,10" fill="var(--green)" opacity="0.9"/></svg></div>
+        <h3 id="v1t">Implementación rápida</h3>
+        <p id="v1p">De cero a agente activo en semanas, no meses. Sin infraestructura compleja.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><rect x="2" y="3" width="16" height="11" rx="2" fill="var(--green)" opacity="0.9"/><rect x="6" y="10" width="16" height="11" rx="2" fill="var(--green)" opacity="0.35"/></svg></div>
+        <h3 id="v2t">WhatsApp como plataforma</h3>
+        <p id="v2p">Tus clientes ya usan WhatsApp. Sin apps que instalar, sin curvas de aprendizaje.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><rect x="4" y="4" width="16" height="16" rx="2" fill="var(--green)" opacity="0.9" transform="rotate(45 12 12)"/><rect x="7" y="7" width="10" height="10" rx="1" fill="white" opacity="0.5" transform="rotate(45 12 12)"/><rect x="10" y="10" width="4" height="4" fill="var(--green)" transform="rotate(45 12 12)"/></svg></div>
+        <h3 id="v3t">Soluciones verticales</h3>
+        <p id="v3p">Cada agente está entrenado para su industria: proptech, ventas, soporte.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M4 8 L12 2 L20 8 L16 8 L16 16 L8 16 L8 8 Z" fill="var(--green)" opacity="0.9"/><path d="M6 12 L6 20 L18 20 L18 12" stroke="var(--green)" stroke-width="2.5" fill="none" opacity="0.5"/></svg></div>
+        <h3 id="v4t">Reemplazamos sistemas viejos</h3>
+        <p id="v4p">Migramos operaciones de herramientas obsoletas a tecnología moderna.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="soluciones" class="solutions">
+  <div class="container">
+    <span class="section-tag" id="tag-sol">Nuestros productos</span>
+    <h2 class="section-title" id="title-sol">Tres líneas de producto,<br>un solo canal: <em>WhatsApp</em></h2>
+    <p class="section-sub" id="sub-sol">Cada producto resuelve un problema real de negocio en LATAM, con IA y sin fricción para el usuario.</p>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-tag"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><rect x="1" y="4" width="9" height="11"/><rect x="10" y="7" width="5" height="8"/><rect x="3" y="6" width="2" height="2" fill="white"/><rect x="6" y="6" width="2" height="2" fill="white"/><rect x="3" y="10" width="2" height="2" fill="white"/><rect x="6" y="10" width="2" height="2" fill="white"/></svg> <span id="s1tag">Proptech</span></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:#1a7a4a;letter-spacing:-0.02em;margin:-0.25rem 0 0.25rem">ConvivIA</div>
+        <p id="s1p">Gestión inteligente de propiedades horizontales. Administradores, residentes y consejo, comunicados por WhatsApp.</p>
+        <ul class="sol-features">
+          <li id="s1f1">Recaudo de cuotas y reportes automáticos</li>
+          <li id="s1f2">PQRS y comunicados sin correos perdidos</li>
+          <li id="s1f3">Reservas de zonas comunes en segundos</li>
+          <li id="s1f4">Votaciones y asambleas digitales</li>
+        </ul>
+        <a href="https://convivia.labgreen.co" target="_blank" class="btn-primary" style="margin-top:0.75rem;font-size:0.88rem;padding:0.65rem 1.4rem"><span id="s1link">Ver ConvivIA →</span></a>
+      </div>
+      <div class="sol-card">
+        <div class="sol-tag"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><rect x="1" y="8" width="3" height="7"/><rect x="6" y="5" width="3" height="10"/><rect x="11" y="2" width="3" height="13"/></svg> <span id="s2tag">CRM · PyMEs</span></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:#1a7a4a;letter-spacing:-0.02em;margin:-0.25rem 0 0.25rem">VendIA</div>
+        <p id="s2p">CRM de ventas con IA para agentes comerciales y PyMEs en LATAM. Centraliza conversaciones de WhatsApp, califica leads automáticamente y sugiere respuestas en tiempo real.</p>
+        <ul class="sol-features">
+          <li id="s2f1">Calificación automática de leads con IA</li>
+          <li id="s2f2">Sugerencias de respuesta según el contexto</li>
+          <li id="s2f3">Pipeline Kanban: Nuevo → Contactado → Cerrado</li>
+          <li id="s2f4">Dashboard con métricas y gráficas de actividad</li>
+        </ul>
+      </div>
+      <div class="sol-card">
+        <div class="sol-tag"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><polygon points="8,1 15,5 15,11 8,15 1,11 1,5"/></svg> <span id="s3tag">Automatización · Agentes</span></div>
+        <h3 id="s3title">Agentes IA a medida</h3>
+        <p id="s3p">¿Tienes un proceso que consume tiempo de tu equipo? Lo convertimos en un agente IA que opera 24/7 por WhatsApp para cualquier industria.</p>
+        <ul class="sol-features">
+          <li id="s3f1">Soporte al cliente automatizado</li>
+          <li id="s3f2">Agendamiento y reservas por chat</li>
+          <li id="s3f3">Facturación y gestión documental</li>
+          <li id="s3f4">Cualquier SaaS con IA + WhatsApp</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wa-section">
+  <div class="container">
+    <div class="wa-inner">
+      <div class="wa-phone">
+        <div class="wa-header">
+          <div class="wa-avatar"><svg viewBox="0 0 24 24" width="18" height="18" fill="white"><polygon points="12,2 22,8 22,16 12,22 2,16 2,8"/></svg></div>
+          <div><div class="wa-name">Agente LabGreen</div><div class="wa-status">● En línea</div></div>
+        </div>
+        <div class="wa-msgs">
+          <div class="msg user">Hola, ¿cuánto debo de administración?</div>
+          <div class="msg-time">9:02 am ✓✓</div>
+          <div class="msg bot">¡Hola Carlos! 👋 Tienes <strong>$245.000</strong> pendientes. Vence el <strong>5 de mayo</strong>.<br><br>¿Cómo deseas pagar?<br>1 · Tarjeta débito o crédito<br>2 · Código QR<br>3 · Pago inmediato (link)</div>
+          <div class="msg user">3, el link por favor</div>
+          <div class="msg-time">9:03 am ✓✓</div>
+          <div class="msg bot">Aquí tu link de pago seguro:<br><span style="color:#1a7a4a;text-decoration:underline;font-size:0.78rem">pay.convivia.app/carlos-apt302</span><br><br>Válido por 24 horas. ✅</div>
+          <div class="msg user">Listo, ya pagué</div>
+          <div class="msg bot">¡Pago confirmado! 🎉 Recibo enviado a tu correo. ¿En qué más te ayudo?</div>
+        </div>
+      </div>
+      <div class="wa-text">
+        <span class="section-tag" id="wa-tag">WhatsApp primero</span>
+        <h2 id="wa-title">Tu negocio donde<br>viven tus <em>clientes</em></h2>
+        <p id="wa-text">En Latinoamérica, tus clientes ya están en WhatsApp. Tu negocio también debería estarlo.</p>
+        <div class="wa-chips">
+          <span class="chip" id="chip1">Sin app que descargar</span>
+          <span class="chip" id="chip2">Disponible 24/7</span>
+          <span class="chip" id="chip3">Responde en segundos</span>
+          <span class="chip" id="chip4">Multiusuario</span>
+          <span class="chip" id="chip5">Integra tus sistemas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como">
+  <div class="container">
+    <span class="section-tag" id="how-tag">Proceso</span>
+    <h2 class="section-title" id="how-title">Del diagnóstico al agente<br><em>activo en semanas</em></h2>
+    <div class="how-grid">
+      <div class="how-step"><div class="step-num">01</div><h4 id="h1t">Diagnóstico</h4><p id="h1p">Entendemos tu operación, cuellos de botella y herramientas actuales.</p></div>
+      <div class="how-step"><div class="step-num">02</div><h4 id="h2t">Diseño</h4><p id="h2p">Diseñamos el agente y los flujos conversacionales para tu contexto.</p></div>
+      <div class="how-step"><div class="step-num">03</div><h4 id="h3t">Integración</h4><p id="h3p">Conectamos con tus sistemas actuales y migramos la información.</p></div>
+      <div class="how-step"><div class="step-num">04</div><h4 id="h4t">Lanzamiento</h4><p id="h4p">Piloto, ajustes finos y despliegue completo con soporte continuo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="migraciones" style="background:var(--bg2)">
+  <div class="container">
+    <span class="section-tag" id="mig-tag">Modernización</span>
+    <h2 class="section-title" id="mig-title">Migramos tu operación<br>a <em>tecnología moderna</em></h2>
+    <p class="section-sub" id="mig-sub">¿Excel, software viejo o procesos manuales? Los reemplazamos con soluciones modernas conectadas a WhatsApp, sin perder datos ni contexto.</p>
+    <div class="mig-grid">
+      <div class="mig-card"><div class="mig-from" id="m1from">Excel / Hojas de cálculo</div><div class="mig-arrow">→</div><div class="mig-to" id="m1to">Agente IA + Dashboard</div><div class="mig-desc" id="m1desc">Reportes automáticos, sin fórmulas rotas ni archivos perdidos.</div></div>
+      <div class="mig-card"><div class="mig-from" id="m2from">CRM desactualizado</div><div class="mig-arrow">→</div><div class="mig-to" id="m2to">CRM por WhatsApp</div><div class="mig-desc" id="m2desc">Tu equipo opera desde el chat. Sin licencias costosas.</div></div>
+      <div class="mig-card"><div class="mig-from" id="m3from">Software legado</div><div class="mig-arrow">→</div><div class="mig-to" id="m3to">Arquitectura moderna</div><div class="mig-desc" id="m3desc">Bases de datos, APIs y flujos migrados a tecnologías actuales.</div></div>
+      <div class="mig-card"><div class="mig-from" id="m4from">Procesos manuales</div><div class="mig-arrow">→</div><div class="mig-to" id="m4to">Automatización IA</div><div class="mig-desc" id="m4desc">Lo que hacen 3 personas en 8 horas, el agente lo hace en segundos.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2 id="cta-title">¿Tu negocio merece un <em>agente IA</em> propio?</h2>
+      <p id="cta-sub">Cuéntanos tu caso: CRM, comunidades o cualquier proceso. En 48 horas te mostramos cómo LabGreen puede transformarlo.</p>
+      <a href="#contacto" class="btn-white" id="cta-btn">Agendar diagnóstico gratis</a>
+    </div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="container">
+    <span class="section-tag" id="cont-tag">Contacto</span>
+    <h2 class="section-title" id="cont-title">Construyamos tu <em>próximo producto</em></h2>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-item"><div class="contact-ico">✉️</div><div><h3 id="ci1h">Email</h3><p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7704161a02121b371b16151005121219591418">[email&#160;protected]</a></p></div></div>
+        <div class="contact-item"><div class="contact-ico">📍</div><div><h3 id="ci2h">Ubicación</h3><p id="ci2p">Colombia · México · Argentina · y toda Latinoamérica</p></div></div>
+        <div class="contact-item"><div class="contact-ico">📞</div><div><h3 id="ci-phone">Teléfono / WhatsApp</h3><p>+57 320 428 1408</p></div></div>
+        <div class="contact-item"><div class="contact-ico" style="font-size:0.8rem">WA</div><div><h3 id="ci3h">WhatsApp</h3><p id="ci3p">Respuesta en menos de 24 horas</p></div></div>
+      </div>
+      <form id="contact-form">
+        <input type="text" id="f-name" name="nombre" placeholder="Tu nombre" required/>
+        <input type="email" id="f-email" name="email" placeholder="Correo electrónico" required/>
+        <input type="text" id="f-co" name="empresa" placeholder="Empresa (opcional)"/>
+        <textarea id="f-msg" name="mensaje" placeholder="¿CRM, ConvivIA, agente a medida? Cuéntanos tu idea..." required></textarea>
+        <button type="submit" id="f-btn">Enviar mensaje →</button>
+        <div id="success-msg" style="display:none;background:var(--green-dim);border:1px solid var(--green-border);border-radius:8px;padding:1rem;color:var(--green);text-align:center;font-weight:600">✅ ¡Mensaje enviado! Te contactamos pronto.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="#" style="display:flex;justify-content:center;text-decoration:none"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 38" style="height:36px;width:auto">
+  <polygon points="19,2 32,10 32,26 19,34 6,26 6,10" fill="#e8f5ee"/>
+  <polygon points="19,7 29,13 29,25 19,31 9,25 9,13" fill="none" stroke="#1a7a4a" stroke-width="1.8"/>
+  <circle cx="19" cy="18" r="4" fill="#1a7a4a"/>
+  <line x1="19" y1="14" x2="19" y2="7"  stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="23" y1="16" x2="29" y2="13" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="23" y1="20" x2="29" y2="25" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="19" y1="22" x2="19" y2="31" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="15" y1="20" x2="9"  y2="25" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <line x1="15" y1="16" x2="9"  y2="13" stroke="#1a7a4a" stroke-width="1.2" opacity="0.3"/>
+  <circle cx="19" cy="2"  r="2.5" fill="#22c77a"/>
+  <circle cx="32" cy="10" r="2.5" fill="#22c77a"/>
+  <circle cx="32" cy="26" r="2.5" fill="#22c77a"/>
+  <circle cx="19" cy="34" r="2.5" fill="#22c77a"/>
+  <circle cx="6"  cy="26" r="2.5" fill="#22c77a"/>
+  <circle cx="6"  cy="10" r="2.5" fill="#22c77a"/>
+  <text x="42" y="24" font-family="DM Sans,system-ui,sans-serif" font-size="22"><tspan font-weight="300" fill="#1a2318">Lab</tspan><tspan font-weight="700" fill="#1a7a4a">Green</tspan></text>
+</svg></a>
+  <p id="footer-txt">© 2026 LabGreen · Todos los derechos reservados · <a href="#">Privacidad</a></p>
+</footer>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var data = {
+    nombre: document.getElementById('f-name').value,
+    email: document.getElementById('f-email').value,
+    empresa: document.getElementById('f-co').value,
+    mensaje: document.getElementById('f-msg').value
+  };
+  fetch('https://formspree.io/f/xqegygyk', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function(r) {
+    if(r.ok) {
+      document.getElementById('f-btn').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    }
+  }).catch(function() {
+    alert('Error al enviar. Por favor escríbenos a contactenos@labgreen.co');
+  });
+});
+
+var _lang = 'es';
+
+var _t = {
+  es: {
+    nav: ['Soluciones','Como funciona','Migraciones','Hablar con un agente'],
+    badge: 'Agentes IA activos por WhatsApp',
+    h1: 'Soluciones SaaS con IA<br>que viven en <em>WhatsApp</em>',
+    sub: 'Construimos productos de IA para LATAM: CRM para comercios, gestión de comunidades y automatización de procesos, todo operando desde WhatsApp.',
+    demo: 'Ver una demo', explore: 'Explorar soluciones →',
+    tagLab: 'El laboratorio', titleLab: 'Un estudio de productos SaaS<br>construidos para <em>LATAM</em>',
+    subLab: 'Cada producto nace de un problema real en Latinoamerica. IA + WhatsApp como plataforma, sin friccion para el usuario final.',
+    v1t:'Implementación rápida',v1p:'De cero a agente activo en semanas, no meses. Sin infraestructura compleja.',
+    v2t:'WhatsApp como plataforma',v2p:'Tus clientes ya usan WhatsApp. Sin apps que instalar, sin curvas de aprendizaje.',
+    v3t:'Soluciones verticales',v3p:'Cada agente está entrenado para su industria: proptech, ventas, soporte.',
+    v4t:'Reemplazamos sistemas viejos',v4p:'Migramos operaciones de herramientas obsoletas a tecnología moderna.',
+    tagSol:'Nuestros productos', titleSol:'Tres líneas de producto,<br>un solo canal: <em>WhatsApp</em>',
+    subSol:'Cada producto resuelve un problema real de negocio en LATAM, con IA y sin fricción para el usuario.',
+    s1tag:'Proptech',s1title:'ConvivIA',s1p:'Gestión inteligente de propiedades horizontales. Administradores, residentes y consejo, comunicados por WhatsApp.',
+    s1f1:'Recaudo de cuotas y reportes automáticos',s1f2:'PQRS y comunicados sin correos perdidos',s1f3:'Reservas de zonas comunes en segundos',s1f4:'Votaciones y asambleas digitales',
+    s1link:'Ver ConvivIA →',
+    s2tag:'CRM · PyMEs',s2title:'VendIA',s2p:'CRM de ventas con IA para agentes comerciales y PyMEs en LATAM. Centraliza conversaciones de WhatsApp, califica leads automáticamente y sugiere respuestas en tiempo real.',
+    s2f1:'Calificación automática de leads con IA',s2f2:'Sugerencias de respuesta según el contexto',s2f3:'Pipeline Kanban: Nuevo → Contactado → Cerrado',s2f4:'Dashboard con métricas y gráficas de actividad',
+    s3tag:'Automatización · Agentes',s3title:'Agentes IA a medida',s3p:'¿Tienes un proceso que consume tiempo de tu equipo? Lo convertimos en un agente IA que opera 24/7 por WhatsApp para cualquier industria.',
+    s3f1:'Soporte al cliente automatizado',s3f2:'Agendamiento y reservas por chat',s3f3:'Facturación y gestión documental',s3f4:'Cualquier SaaS con IA + WhatsApp',
+    waTag:'WhatsApp primero',waTitle:'Tu negocio donde<br>viven tus <em>clientes</em>',waText:'En Latinoamérica, tus clientes ya están en WhatsApp. Tu negocio también debería estarlo.',
+    chip1:'Sin app que descargar',chip2:'Disponible 24/7',chip3:'Responde en segundos',chip4:'Multiusuario',chip5:'Integra tus sistemas',
+    howTag:'Proceso',howTitle:'Del diagnóstico al agente<br><em>activo en semanas</em>',
+    h1t:'Diagnóstico',h1p:'Entendemos tu operación, cuellos de botella y herramientas actuales.',
+    h2t:'Diseño',h2p:'Diseñamos el agente y los flujos conversacionales para tu contexto.',
+    h3t:'Integración',h3p:'Conectamos con tus sistemas actuales y migramos la información.',
+    h4t:'Lanzamiento',h4p:'Piloto, ajustes finos y despliegue completo con soporte continuo.',
+    migTag:'Modernización',migTitle:'Migramos tu operación<br>a <em>tecnología moderna</em>',
+    migSub:'¿Excel, software viejo o procesos manuales? Los reemplazamos con soluciones modernas conectadas a WhatsApp, sin perder datos ni contexto.',
+    m1from:'Excel / Hojas de cálculo',m1to:'Agente IA + Dashboard',m1desc:'Reportes automáticos, sin fórmulas rotas ni archivos perdidos.',
+    m2from:'CRM desactualizado',m2to:'CRM por WhatsApp',m2desc:'Tu equipo opera desde el chat. Sin licencias costosas.',
+    m3from:'Software legado',m3to:'Arquitectura moderna',m3desc:'Bases de datos, APIs y flujos migrados a tecnologías actuales.',
+    m4from:'Procesos manuales',m4to:'Automatización IA',m4desc:'Lo que hacen 3 personas en 8 horas, el agente lo hace en segundos.',
+    ctaTitle:'¿Tu negocio merece un <em>agente IA</em> propio?',ctaSub:'Cuéntanos tu caso: CRM, comunidades o cualquier proceso. En 48 horas te mostramos cómo LabGreen puede transformarlo.',ctaBtn:'Agendar diagnóstico gratis',
+    contTag:'Contacto',contTitle:'Construyamos tu <em>próximo producto</em>',
+    ciPhone:'Teléfono / WhatsApp',ci1h:'Email',ci2h:'Ubicación',ci2p:'Colombia · México · Argentina · y toda Latinoamérica',ci3h:'WhatsApp',ci3p:'Respuesta en menos de 24 horas',
+    fname:'Tu nombre',femail:'Correo electrónico',fco:'Empresa (opcional)',fmsg:'¿CRM, ConvivIA, agente a medida? Cuéntanos tu idea...',fbtn:'Enviar mensaje →',
+    footer:'© 2026 LabGreen · Todos los derechos reservados · <a href="#" style="color:rgba(255,255,255,0.4);text-decoration:none">Privacidad</a>'
+  },
+  en: {
+    nav: ['Solutions','How it works','Migrations','Talk to an agent'],
+    badge: 'Active AI Agents on WhatsApp',
+    h1: 'AI-powered SaaS<br>that lives on <em>WhatsApp</em>',
+    sub: 'We build AI products for LATAM: CRM for businesses, community management and process automation, all running on WhatsApp.',
+    demo: 'See a demo', explore: 'Explore solutions →',
+    tagLab:'The lab',titleLab:'A SaaS product studio<br>built for <em>Latin America</em>',
+    subLab:'Every product we build starts from a real problem in Latin America. AI + WhatsApp as the platform, zero friction for the end user.',
+    v1t:'Fast deployment',v1p:'From zero to active agent in weeks, not months. No complex infrastructure.',
+    v2t:'WhatsApp as platform',v2p:'Your clients already use WhatsApp. No new apps, no learning curves.',
+    v3t:'Vertical solutions',v3p:'Each agent is trained for its industry: proptech, sales, support.',
+    v4t:'We replace legacy systems',v4p:'We migrate operations from outdated tools to modern technology.',
+    tagSol:'Our products',titleSol:'Three product lines,<br>one channel: <em>WhatsApp</em>',
+    subSol:'Each product solves a real business problem in LATAM, with AI and zero friction for the user.',
+    s1tag:'Proptech',s1title:'ConvivIA',s1p:'Smart management for residential communities. Admins, residents and board, all connected via WhatsApp.',
+    s1f1:'Automated fee collection and reports',s1f2:'Requests and announcements without lost emails',s1f3:'Common area bookings in seconds',s1f4:'Digital votes and assemblies',
+    s1link:'Visit ConvivIA →',
+    s2tag:'CRM · SMBs',s2title:'VendIA',s2p:'AI-powered sales CRM for commercial agents and SMBs across LATAM. Centralizes WhatsApp conversations, automatically scores leads and suggests replies in real time.',
+    s2f1:'Automatic AI lead scoring',s2f2:'Context-aware reply suggestions',s2f3:'Kanban pipeline: New → Contacted → Closed',s2f4:'Dashboard with activity metrics and charts',
+    s3tag:'Automation · Agents',s3title:'Custom AI Agents',s3p:'Got a process eating your team time? We turn it into an AI agent that runs 24/7 on WhatsApp for any industry.',
+    s3f1:'Automated customer support',s3f2:'Scheduling and bookings by chat',s3f3:'Invoicing and document management',s3f4:'Any SaaS with AI + WhatsApp',
+    waTag:'WhatsApp first',waTitle:'Your business where<br>your <em>clients</em> live',waText:'In Latin America, your clients are already on WhatsApp. Your business should be too.',
+    chip1:'No app to download',chip2:'Available 24/7',chip3:'Responds in seconds',chip4:'Multi-user',chip5:'Integrates your systems',
+    howTag:'Process',howTitle:'From diagnosis to active agent<br><em>in weeks</em>',
+    h1t:'Diagnosis',h1p:'We understand your operation, bottlenecks and current tools.',
+    h2t:'Design',h2p:'We design the agent and conversational flows for your context.',
+    h3t:'Integration',h3p:'We connect to your current systems and migrate the data.',
+    h4t:'Launch',h4p:'Pilot, fine-tuning and full deployment with ongoing support.',
+    migTag:'Modernization',migTitle:'We migrate your operation<br>to <em>modern technology</em>',
+    migSub:'Excel, legacy software or manual processes? We replace them with modern solutions connected to WhatsApp, without losing data or context.',
+    m1from:'Excel / Spreadsheets',m1to:'AI Agent + Dashboard',m1desc:'Automatic reports, no broken formulas or lost files.',
+    m2from:'Outdated CRM',m2to:'WhatsApp CRM',m2desc:'Your team runs from the chat. No expensive licenses.',
+    m3from:'Legacy software',m3to:'Modern architecture',m3desc:'Databases, APIs and flows migrated to current technologies.',
+    m4from:'Manual processes',m4to:'AI Automation',m4desc:'What 3 people do in 8 hours, the agent does in seconds.',
+    ctaTitle:'Does your business deserve its own <em>AI agent</em>?',ctaSub:'Tell us your case: CRM, communities, or any process. In 48 hours we show you how LabGreen can transform it.',ctaBtn:'Schedule free diagnosis',
+    contTag:'Contact',contTitle:'Lets build your <em>next product</em>',
+    ciPhone:'Phone / WhatsApp',ci1h:'Email',ci2h:'Location',ci2p:'Colombia · Mexico · Argentina · and all Latin America',ci3h:'WhatsApp',ci3p:'Response within 24 hours',
+    fname:'Your name',femail:'Email address',fco:'Company (optional)',fmsg:'CRM, ConvivIA, custom agent? Tell us your idea...',fbtn:'Send message →',
+    footer:'© 2026 LabGreen · All rights reserved · <a href="#" style="color:rgba(255,255,255,0.4);text-decoration:none">Privacy</a>'
+  }
+};
+
+function g(id){ return document.getElementById(id); }
+function s(id, html){ var el = g(id); if(el) el.innerHTML = html; }
+function t(id, txt){ var el = g(id); if(el) el.textContent = txt; }
+function p(id, txt){ var el = g(id); if(el) el.placeholder = txt; }
+
+function applyLang(l) {
+  _lang = l;
+  localStorage.setItem('lg', l);
+  var tr = _t[l];
+  g('lang-toggle').textContent = l === 'es' ? 'EN' : 'ES';
+  t('nav-sol', tr.nav[0]); t('nav-how', tr.nav[1]); t('nav-mig', tr.nav[2]); t('nav-cta-btn', tr.nav[3]);
+  t('badge-text', tr.badge);
+  s('hero-title', tr.h1); t('hero-sub', tr.sub);
+  t('btn-demo', tr.demo); t('btn-explore', tr.explore);
+  t('tag-lab', tr.tagLab); s('title-lab', tr.titleLab); t('sub-lab', tr.subLab);
+  t('v1t', tr.v1t); t('v1p', tr.v1p); t('v2t', tr.v2t); t('v2p', tr.v2p);
+  t('v3t', tr.v3t); t('v3p', tr.v3p); t('v4t', tr.v4t); t('v4p', tr.v4p);
+  t('tag-sol', tr.tagSol); s('title-sol', tr.titleSol); t('sub-sol', tr.subSol);
+  t('s1tag', tr.s1tag); t('s1title', tr.s1title); t('s1p', tr.s1p);
+  t('s1f1', tr.s1f1); t('s1f2', tr.s1f2); t('s1f3', tr.s1f3); t('s1f4', tr.s1f4);
+  t('s1link', tr.s1link);
+  t('s2tag', tr.s2tag); t('s2title', tr.s2title); t('s2p', tr.s2p);
+  t('s2f1', tr.s2f1); t('s2f2', tr.s2f2); t('s2f3', tr.s2f3); t('s2f4', tr.s2f4);
+  t('s3tag', tr.s3tag); t('s3title', tr.s3title); t('s3p', tr.s3p);
+  t('s3f1', tr.s3f1); t('s3f2', tr.s3f2); t('s3f3', tr.s3f3); t('s3f4', tr.s3f4);
+  t('wa-tag', tr.waTag); s('wa-title', tr.waTitle); t('wa-text', tr.waText);
+  t('chip1', tr.chip1); t('chip2', tr.chip2); t('chip3', tr.chip3); t('chip4', tr.chip4); t('chip5', tr.chip5);
+  t('how-tag', tr.howTag); s('how-title', tr.howTitle);
+  t('h1t', tr.h1t); t('h1p', tr.h1p); t('h2t', tr.h2t); t('h2p', tr.h2p);
+  t('h3t', tr.h3t); t('h3p', tr.h3p); t('h4t', tr.h4t); t('h4p', tr.h4p);
+  t('mig-tag', tr.migTag); s('mig-title', tr.migTitle); t('mig-sub', tr.migSub);
+  t('m1from', tr.m1from); t('m1to', tr.m1to); t('m1desc', tr.m1desc);
+  t('m2from', tr.m2from); t('m2to', tr.m2to); t('m2desc', tr.m2desc);
+  t('m3from', tr.m3from); t('m3to', tr.m3to); t('m3desc', tr.m3desc);
+  t('m4from', tr.m4from); t('m4to', tr.m4to); t('m4desc', tr.m4desc);
+  s('cta-title', tr.ctaTitle); t('cta-sub', tr.ctaSub); t('cta-btn', tr.ctaBtn);
+  t('cont-tag', tr.contTag); s('cont-title', tr.contTitle);
+  t('ci-phone', tr.ciPhone); t('ci1h', tr.ci1h); t('ci2h', tr.ci2h); t('ci2p', tr.ci2p); t('ci3h', tr.ci3h); t('ci3p', tr.ci3p);
+  p('f-name', tr.fname); p('f-email', tr.femail); p('f-co', tr.fco); p('f-msg', tr.fmsg);
+  t('f-btn', tr.fbtn);
+  s('footer-txt', tr.footer);
+}
+
+function toggleLang() { applyLang(_lang === 'es' ? 'en' : 'es'); }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var langBtn = document.getElementById('lang-toggle');
+  if(langBtn) langBtn.addEventListener('click', function() { applyLang(_lang === 'es' ? 'en' : 'es'); });
+  var saved = localStorage.getItem('lg');
+  var browser = (navigator.language || 'es').startsWith('en') ? 'en' : 'es';
+  applyLang(saved || browser);
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if(entry.isIntersecting) { entry.target.style.opacity='1'; entry.target.style.transform='translateY(0)'; }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.value-card,.sol-card,.mig-card,.how-step').forEach(function(el) {
+    el.style.opacity='0'; el.style.transform='translateY(18px)'; el.style.transition='opacity 0.5s,transform 0.5s';
+    observer.observe(el);
+  });
+});
+</script>
+
+<a href="https://wa.me/573204281408?text=Hola%20LabGreen%2C%20me%20interesa%20saber%20m%C3%A1s%20sobre%20sus%20soluciones" 
+   target="_blank"
+   style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;width:58px;height:58px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.5);transition:transform 0.2s;text-decoration:none;"
+   onmouseover="this.style.transform='scale(1.12)'"
+   onmouseout="this.style.transform='scale(1)'"
+   title="WhatsApp">
+  <svg viewBox="0 0 24 24" width="30" height="30" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.523 5.845L.057 23.428a.5.5 0 00.609.61l5.737-1.505A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm5.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+</a>
+</body>
+</html>
