@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvivIA — Gestión inteligente de propiedad horizontal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a7a4a;--green-mid:#22a063;--green-light:#e8f5ee;
+  --green-dim:rgba(26,122,74,0.08);--green-border:rgba(26,122,74,0.18);
+  --wa:#25D366;--bg:#f9faf8;--bg2:#f2f5f1;--text:#1a2318;
+  --muted:#5a7060;--card:#ffffff;--border:rgba(0,0,0,0.07);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(249,250,248,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-logo{height:36px;display:flex;align-items:center}
+.nav-logo img{height:36px;width:auto}
+nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
+nav ul li a{color:var(--muted);text-decoration:none;font-size:0.9rem;font-weight:500;transition:color 0.2s}
+nav ul li a:hover{color:var(--green)}
+.nav-back{display:inline-flex;align-items:center;gap:0.4rem;color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s}
+.nav-back:hover{color:var(--green)}
+.nav-cta{background:var(--green)!important;color:#fff!important;padding:0.5rem 1.2rem;border-radius:8px;font-weight:600!important}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 2rem 5rem;background:#fff;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(26,122,74,0.05) 0%,transparent 65%);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center}
+.hero-logo{margin-bottom:2rem}
+.hero-logo img{height:80px;width:auto}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:#fff;border:1px solid var(--green-border);color:var(--green);padding:0.5rem 1.2rem;border-radius:20px;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.75rem;box-shadow:0 2px 8px rgba(0,0,0,0.09)}
+.wa-dot{width:7px;height:7px;background:var(--wa);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3.5vw,3.2rem);font-weight:700;line-height:1.12;color:var(--text);margin-bottom:1.5rem;letter-spacing:-0.025em}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero p{font-size:1.1rem;color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:0.5rem;background:var(--green);color:#fff;padding:0.85rem 2rem;border-radius:10px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 16px rgba(26,122,74,0.25)}
+.btn-primary:hover{background:var(--green-mid);transform:translateY(-1px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:0.5rem;border:1.5px solid var(--green-border);color:var(--green);background:#fff;padding:0.85rem 2rem;border-radius:10px;font-weight:600;font-size:0.95rem;text-decoration:none;transition:all 0.2s}
+.btn-secondary:hover{background:var(--green-light)}
+
+.ticker{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0.85rem 0;overflow:hidden}
+.ticker-inner{display:flex;gap:3rem;animation:ticker 25s linear infinite;width:max-content}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:flex;align-items:center;gap:0.5rem;white-space:nowrap;font-size:0.83rem;color:var(--muted);font-weight:500}
+.ticker-item .dot{color:var(--green);font-size:0.6rem}
+
+section{padding:6rem 2rem}
+.container{max-width:1080px;margin:0 auto}
+.section-tag{display:inline-block;color:var(--green);font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.75rem}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3vw,2.6rem);font-weight:700;line-height:1.18;color:var(--text);margin-bottom:1rem}
+.section-title em{font-style:normal;color:var(--green)}
+.section-sub{color:var(--muted);font-size:1rem;max-width:560px;line-height:1.7}
+
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3.5rem}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;transition:box-shadow 0.3s,transform 0.3s}
+.feature-card:hover{box-shadow:0 8px 28px rgba(0,0,0,0.07);transform:translateY(-3px)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+.feature-card h3{font-size:1.05rem;font-weight:700;margin-bottom:0.5rem}
+.feature-card p{font-size:0.875rem;color:var(--muted);line-height:1.6}
+
+.how-section{background:var(--bg2)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:4rem}
+.step{text-align:center;padding:2rem 1.5rem;position:relative}
+.step:not(:last-child)::after{content:"→";position:absolute;right:-0.4rem;top:2.8rem;font-size:1.2rem;color:var(--green-border)}
+.step-num{width:56px;height:56px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:var(--green);margin:0 auto 1rem}
+.step h4{font-size:0.95rem;font-weight:700;margin-bottom:0.4rem}
+.step p{font-size:0.83rem;color:var(--muted)}
+
+.wa-section{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.wa-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.wa-phone{background:#f0f2f0;border-radius:24px;padding:1.25rem;border:1px solid var(--border);max-width:270px;margin:0 auto;box-shadow:0 8px 30px rgba(0,0,0,0.07)}
+.wa-header{display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid rgba(0,0,0,0.07);padding-bottom:0.75rem;margin-bottom:1rem}
+.wa-avatar{width:36px;height:36px;border-radius:50%;background:var(--wa);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.wa-name{font-weight:600;font-size:0.88rem}
+.wa-status{font-size:0.7rem;color:var(--wa)}
+.wa-msgs{display:flex;flex-direction:column;gap:0.5rem}
+.msg{padding:0.55rem 0.85rem;border-radius:10px;font-size:0.8rem;line-height:1.45;max-width:90%}
+.msg.user{background:#dcf8c6;align-self:flex-end;color:#1a3a1a}
+.msg.bot{background:#fff;color:var(--muted);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.msg-time{font-size:0.63rem;color:var(--muted);text-align:right}
+.wa-text h2{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;margin-bottom:1rem}
+.wa-text h2 em{font-style:normal;color:var(--wa)}
+.wa-text p{color:var(--muted);margin-bottom:1.5rem;font-size:0.95rem}
+.wa-chips{display:flex;flex-wrap:wrap;gap:0.5rem}
+.chip{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-size:0.76rem;font-weight:500;padding:0.3rem 0.75rem;border-radius:20px}
+
+.stats-section{background:var(--green);padding:5rem 2rem;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-top:3rem;max-width:900px;margin-left:auto;margin-right:auto}
+.stat{color:#fff}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;line-height:1;margin-bottom:0.5rem}
+.stat-label{font-size:0.9rem;opacity:0.75}
+.stats-title{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:#fff;margin-bottom:0.5rem}
+.stats-sub{color:rgba(255,255,255,0.7);font-size:1rem}
+
+.cta-section{text-align:center}
+.cta-box{max-width:680px;margin:0 auto;background:var(--card);border:1px solid var(--green-border);border-radius:20px;padding:3.5rem 2.5rem;position:relative;overflow:hidden}
+.cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;margin-bottom:1rem}
+.cta-box h2 em{font-style:normal;color:var(--green)}
+.cta-box p{color:var(--muted);margin-bottom:2rem}
+
+form{display:flex;flex-direction:column;gap:0.85rem;max-width:500px;margin:0 auto;text-align:left}
+form input,form textarea{background:#fff;border:1px solid var(--border);color:var(--text);padding:0.8rem 1rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:border-color 0.2s;outline:none}
+form input:focus,form textarea:focus{border-color:var(--green)}
+form textarea{resize:vertical;min-height:100px}
+form input::placeholder,form textarea::placeholder{color:#bbb}
+form button{background:var(--green);color:#fff;border:none;padding:0.85rem 2rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+form button:hover{background:var(--green-mid)}
+
+footer{background:var(--text);padding:2.5rem 2rem;text-align:center}
+footer p{color:rgba(255,255,255,0.4);font-size:0.82rem}
+footer a{color:rgba(255,255,255,0.4);text-decoration:none}
+.footer-inner{display:flex;flex-direction:column;align-items:center;gap:0.75rem}
+
+@media(max-width:768px){nav ul{display:none}.wa-inner{grid-template-columns:1fr}.step:not(:last-child)::after{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://labgreen.co" class="nav-back">← LabGreen</a>
+  <ul>
+    <li><a href="#funcionalidades" id="nav-feat">Funcionalidades</a></li>
+    <li><a href="#dashboard" id="nav-dash">Dashboard</a></li>
+    <li><a href="#como-funciona" id="nav-how">Cómo funciona</a></li>
+    <li><a href="#contacto" id="nav-cont">Contacto</a></li>
+    <li><a href="#" class="nav-cta" style="opacity:0.5;cursor:not-allowed;" title="Próximamente">Acceder al portal</a></li>
+    <li><a href="#contacto" class="nav-cta" id="nav-cta-btn">Solicitar demo</a></li>
+  </ul>
+  <button id="lang-toggle" style="background:none;border:1.5px solid var(--green-border);color:var(--green);padding:0.35rem 0.85rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;margin-left:1rem">EN</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-logo" style="display:flex;justify-content:center;width:100%">
+      <div style="display:flex;align-items:center;gap:16px;justify-content:center">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 65" style="height:110px;width:auto;flex-shrink:0">
+    <rect x="0"  y="22" width="10" height="38" fill="#1a7a4a" opacity="0.35" rx="1"/>
+    <rect x="13" y="10" width="10" height="50" fill="#1a7a4a" opacity="0.6" rx="1"/>
+    <rect x="26" y="0"  width="16" height="60" fill="#1a7a4a" rx="1"/>
+    <rect x="45" y="12" width="10" height="48" fill="#1a7a4a" opacity="0.5" rx="1"/>
+    <rect x="29" y="6"  width="4" height="4" fill="white" opacity="0.7" rx="0.5"/>
+    <rect x="35" y="6"  width="4" height="4" fill="white" opacity="0.7" rx="0.5"/>
+    <rect x="29" y="14" width="4" height="4" fill="white" opacity="0.7" rx="0.5"/>
+    <rect x="35" y="14" width="4" height="4" fill="white" opacity="0.7" rx="0.5"/>
+    <rect x="29" y="22" width="4" height="4" fill="white" opacity="0.7" rx="0.5"/>
+    <rect x="35" y="22" width="4" height="4" fill="white" opacity="0.7" rx="0.5"/>
+    <line x1="0" y1="60" x2="58" y2="60" stroke="#1a7a4a" stroke-width="1.5" opacity="0.25"/>
+  </svg>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:58px;line-height:1;letter-spacing:-2px"><span style="font-weight:300;color:#1a2318">Conviv</span><span style="font-weight:800;color:#1a7a4a">IA</span></div>
+    <div style="height:1px;background:#e8f0e8;width:100%"></div>
+    <div style="font-family:system-ui,sans-serif;font-size:11px;color:#a0b8a8;letter-spacing:3px">GESTIÓN · COMUNIDADES</div>
+  </div>
+</div>
+    </div>
+    <div class="hero-badge"><div class="wa-dot"></div> Gestión inteligente por WhatsApp</div>
+    <h1 id="hero-h1">La administración de tu copropiedad,<br><em>simple y en WhatsApp</em></h1>
+    <p id="hero-p">ConvivIA es el agente IA que conecta administradores, residentes y consejo de administración en un solo canal. Sin apps, sin correos perdidos, sin complicaciones.</p>
+    <div class="hero-btns">
+      <a href="#contacto" class="btn-primary" id="btn-demo">Solicitar demo gratuita</a>
+      <a href="#funcionalidades" class="btn-secondary" id="btn-feat">Ver funcionalidades →</a>
+      <a href="#" class="btn-secondary" style="opacity:0.6;cursor:not-allowed;font-size:0.85rem;" title="Próximamente">🔐 Portal de acceso — Próximamente</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span class="dot">●</span> Recaudo de cuotas automático</div>
+    <div class="ticker-item"><span class="dot">●</span> PQRS sin correos perdidos</div>
+    <div class="ticker-item"><span class="dot">●</span> Reservas de zonas comunes</div>
+    <div class="ticker-item"><span class="dot">●</span> Comunicados instantáneos</div>
+    <div class="ticker-item"><span class="dot">●</span> Votaciones digitales</div>
+    <div class="ticker-item"><span class="dot">●</span> Asambleas virtuales</div>
+    <div class="ticker-item"><span class="dot">●</span> Reportes automáticos</div>
+    <div class="ticker-item"><span class="dot">●</span> Recaudo de cuotas automático</div>
+    <div class="ticker-item"><span class="dot">●</span> PQRS sin correos perdidos</div>
+    <div class="ticker-item"><span class="dot">●</span> Reservas de zonas comunes</div>
+    <div class="ticker-item"><span class="dot">●</span> Comunicados instantáneos</div>
+    <div class="ticker-item"><span class="dot">●</span> Votaciones digitales</div>
+    <div class="ticker-item"><span class="dot">●</span> Asambleas virtuales</div>
+    <div class="ticker-item"><span class="dot">●</span> Reportes automáticos</div>
+  </div>
+</div>
+
+<section id="funcionalidades">
+  <div class="container">
+    <span class="section-tag" id="tag-feat">Funcionalidades</span>
+    <h2 class="section-title" id="title-feat">Todo lo que necesita tu copropiedad,<br><em>en un solo lugar</em></h2>
+    <p class="section-sub" id="sub-feat">Diseñado para administradores que quieren hacer más en menos tiempo, sin depender de correos ni llamadas.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="2" y="5" width="20" height="14" rx="2" fill="var(--green)" opacity="0.2" stroke="var(--green)" stroke-width="1.5"/><polyline points="2,5 12,13 22,5" stroke="var(--green)" stroke-width="1.5" fill="none"/></svg></div>
+        <h3 id="f1t">Comunicados instantáneos</h3>
+        <p id="f1p">Envía avisos, circulares y alertas a todos los residentes por WhatsApp. Confirmación de lectura automática.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="3" width="18" height="18" rx="2" fill="var(--green)" opacity="0.15" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="12" x2="16" y2="12" stroke="var(--green)" stroke-width="1.5"/><line x1="12" y1="8" x2="12" y2="16" stroke="var(--green)" stroke-width="1.5"/></svg></div>
+        <h3 id="f2t">Recaudo de cuotas</h3>
+        <p id="f2p">Genera cobros automáticos, envía recordatorios y recibe pagos con link directo desde WhatsApp. Sin perseguir a nadie.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="var(--green)" opacity="0.15" stroke="var(--green)" stroke-width="1.5"/></svg></div>
+        <h3 id="f3t">PQRS y solicitudes</h3>
+        <p id="f3p">Los residentes escriben por WhatsApp y el sistema registra, clasifica y hace seguimiento de cada solicitud automáticamente.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="3" y="4" width="18" height="18" rx="2" fill="var(--green)" opacity="0.15" stroke="var(--green)" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="var(--green)" stroke-width="1.5"/><line x1="8" y1="2" x2="8" y2="6" stroke="var(--green)" stroke-width="1.5"/><line x1="3" y1="10" x2="21" y2="10" stroke="var(--green)" stroke-width="1.5"/></svg></div>
+        <h3 id="f4t">Reservas de zonas comunes</h3>
+        <p id="f4p">Salón comunal, cancha, BBQ — los residentes reservan por WhatsApp y el sistema gestiona disponibilidad en tiempo real.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><circle cx="12" cy="12" r="9" fill="var(--green)" opacity="0.15" stroke="var(--green)" stroke-width="1.5"/><polyline points="9,12 11,14 15,10" stroke="var(--green)" stroke-width="1.5" fill="none"/></svg></div>
+        <h3 id="f5t">Votaciones y asambleas</h3>
+        <p id="f5p">Realiza votaciones y asambleas digitales con quórum verificado. Actas generadas automáticamente.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="1" y="8" width="4" height="13" fill="var(--green)" opacity="0.9"/><rect x="7" y="5" width="4" height="16" fill="var(--green)" opacity="0.7"/><rect x="13" y="2" width="4" height="19" fill="var(--green)" opacity="0.5"/><rect x="19" y="10" width="4" height="11" fill="var(--green)" opacity="0.3"/></svg></div>
+        <h3 id="f6t">Reportes automáticos</h3>
+        <p id="f6p">Estado de cartera, ingresos, egresos y novedades — reportes generados automáticamente y enviados al consejo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wa-section">
+  <div class="container">
+    <div class="wa-inner">
+      <div class="wa-phone">
+        <div class="wa-header">
+          <div class="wa-avatar">🏢</div>
+          <div><div class="wa-name">ConvivIA · Torres del Parque</div><div class="wa-status">● En línea</div></div>
+        </div>
+        <div class="wa-msgs">
+          <div class="msg user">Hola, quiero reservar el salón para el sábado</div>
+          <div class="msg-time">10:22 am ✓✓</div>
+          <div class="msg bot">¡Hola! El salón comunal está <strong>disponible</strong> el sábado 12 de abril. Horarios libres:<br><br>🕙 10:00 am - 2:00 pm<br>🕓 4:00 pm - 8:00 pm<br><br>¿Cuál prefieres?</div>
+          <div class="msg user">De 4 a 8 por favor</div>
+          <div class="msg-time">10:23 am ✓✓</div>
+          <div class="msg bot">Reserva confirmada para el apto 402. Te llegará el reglamento por este chat. ✅<br><br>¿Necesitas algo más?</div>
+        </div>
+      </div>
+      <div class="wa-text">
+        <span class="section-tag" id="wa-tag">WhatsApp como canal</span>
+        <h2 id="wa-title">Donde ya<br>están tus <em>residentes</em></h2>
+        <p id="wa-p">No más apps que nadie descarga. No más correos que nadie lee. ConvivIA opera en el canal que tus residentes ya usan todos los días.</p>
+        <div class="wa-chips">
+          <span class="chip">Sin instalación</span>
+          <span class="chip">Disponible 24/7</span>
+          <span class="chip">Respuesta inmediata</span>
+          <span class="chip">Para todos los residentes</span>
+          <span class="chip">Historial completo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="dashboard" style="background:var(--bg2);padding:6rem 2rem">
+  <div class="container">
+    <span class="section-tag">Dashboard en vivo</span>
+    <h2 class="section-title">Todo tu conjunto,<br><em>en un vistazo</em></h2>
+    <p class="section-sub" style="margin-bottom:3rem">Así se ve ConvivIA en acción. Datos de una copropiedad real, actualizados automáticamente.</p>
+
+    <div style="font-family:'DM Sans',system-ui,sans-serif;background:#f9faf8;padding:1.5rem;border-radius:16px;border:1px solid var(--border)">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#1a2318">Torres del Parque — Dashboard</div>
+          <div style="font-size:12px;color:#5a7060;margin-top:2px">120 unidades · Abril 2026 · Datos de ejemplo</div>
+        </div>
+        <div style="background:#e8f5ee;color:#1a7a4a;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:0.05em">En vivo con ConvivIA</div>
+      </div>
+
+      <!-- METRICS -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem">
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:11px;color:#5a7060;margin-bottom:6px;font-weight:500">Recaudo abril</div>
+          <div style="font-size:26px;font-weight:700;color:#1a2318;line-height:1">87%</div>
+          <div style="font-size:11px;margin-top:4px;color:#1a7a4a">↑ +5% vs marzo</div>
+          <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-top:8px"><div style="width:87%;height:100%;background:#1a7a4a;border-radius:4px"></div></div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:11px;color:#5a7060;margin-bottom:6px;font-weight:500">Morosos</div>
+          <div style="font-size:26px;font-weight:700;color:#1a2318;line-height:1">16</div>
+          <div style="font-size:11px;margin-top:4px;color:#e24b4a">↓ -3 vs marzo</div>
+          <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-top:8px"><div style="width:13%;height:100%;background:#e24b4a;border-radius:4px"></div></div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:11px;color:#5a7060;margin-bottom:6px;font-weight:500">PQRS abiertas</div>
+          <div style="font-size:26px;font-weight:700;color:#1a2318;line-height:1">8</div>
+          <div style="font-size:11px;margin-top:4px;color:#1a7a4a">↑ 24 resueltas</div>
+          <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-top:8px"><div style="width:75%;height:100%;background:#1a7a4a;border-radius:4px"></div></div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:11px;color:#5a7060;margin-bottom:6px;font-weight:500">Reservas mes</div>
+          <div style="font-size:26px;font-weight:700;color:#1a2318;line-height:1">42</div>
+          <div style="font-size:11px;margin-top:4px;color:#1a7a4a">↑ +12 vs marzo</div>
+          <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-top:8px"><div style="width:84%;height:100%;background:#1d9e75;border-radius:4px"></div></div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:11px;color:#5a7060;margin-bottom:6px;font-weight:500">Ocupación</div>
+          <div style="font-size:26px;font-weight:700;color:#1a2318;line-height:1">96%</div>
+          <div style="font-size:11px;margin-top:4px;color:#1a7a4a">115 ocupadas</div>
+          <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-top:8px"><div style="width:96%;height:100%;background:#1a7a4a;border-radius:4px"></div></div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:12px;font-weight:600;color:#1a2318;margin-bottom:8px">Recaudo mensual</div>
+          <div style="display:flex;gap:12px;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#5a7060"><div style="width:10px;height:10px;border-radius:2px;background:#1a7a4a"></div>Pagado</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#5a7060"><div style="width:10px;height:10px;border-radius:2px;background:#e8f5ee;border:1px solid #1a7a4a"></div>Pendiente</div>
+          </div>
+          <div style="position:relative;height:160px"><canvas id="cv-recaudo"></canvas></div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+          <div style="font-size:12px;font-weight:600;color:#1a2318;margin-bottom:8px">PQRS por categoría</div>
+          <div style="position:relative;height:180px"><canvas id="cv-pqrs"></canvas></div>
+        </div>
+      </div>
+
+      <!-- RESERVAS -->
+      <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07);margin-bottom:10px">
+        <div style="font-size:12px;font-weight:600;color:#1a2318;margin-bottom:8px">Reservas por zona — últimos 6 meses</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#5a7060"><div style="width:10px;height:10px;border-radius:2px;background:#1a7a4a"></div>Salón comunal</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#5a7060"><div style="width:10px;height:10px;border-radius:2px;background:#1d9e75"></div>Cancha</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#5a7060"><div style="width:10px;height:10px;border-radius:2px;background:#9fe1cb"></div>BBQ</div>
+        </div>
+        <div style="position:relative;height:160px"><canvas id="cv-reservas"></canvas></div>
+      </div>
+
+      <!-- ASAMBLEAS -->
+      <div style="background:#fff;border-radius:10px;padding:14px 16px;border:0.5px solid rgba(0,0,0,0.07)">
+        <div style="font-size:12px;font-weight:600;color:#1a2318;margin-bottom:12px">Asambleas</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #f0f0f0">
+          <div><div style="font-size:12px;color:#1a2318;font-weight:500">Asamblea ordinaria 2026</div><div style="font-size:11px;color:#5a7060">15 marzo 2026 · 78 participantes</div></div>
+          <span style="font-size:11px;font-weight:700;color:#1a7a4a;background:#e8f5ee;padding:2px 8px;border-radius:10px">Quórum 65%</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #f0f0f0">
+          <div><div style="font-size:12px;color:#1a2318;font-weight:500">Aprobación presupuesto 2026</div><div style="font-size:11px;color:#5a7060">20 enero 2026 · 82 participantes</div></div>
+          <span style="font-size:11px;font-weight:700;color:#1a7a4a;background:#e8f5ee;padding:2px 8px;border-radius:10px">Quórum 68%</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #f0f0f0">
+          <div><div style="font-size:12px;color:#1a2318;font-weight:500">Reforma reglamento zonas comunes</div><div style="font-size:11px;color:#5a7060">5 noviembre 2025 · 61 participantes</div></div>
+          <span style="font-size:11px;font-weight:700;color:#1a7a4a;background:#e8f5ee;padding:2px 8px;border-radius:10px">Quórum 51%</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+          <div><div style="font-size:12px;color:#1a2318;font-weight:500">Asamblea extraordinaria — ascensores</div><div style="font-size:11px;color:#5a7060">12 mayo 2026 · Próxima</div></div>
+          <span style="font-size:11px;font-weight:700;color:#854f0b;background:#faeeda;padding:2px 8px;border-radius:10px">Por confirmar</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function() {
+  var green = '#1a7a4a', green2 = '#1d9e75', green3 = '#9fe1cb', muted = '#5a7060';
+  new Chart(document.getElementById('cv-recaudo'), {
+    type:'bar',
+    data:{
+      labels:['Nov','Dic','Ene','Feb','Mar','Abr'],
+      datasets:[
+        {label:'Pagado',data:[82,79,84,86,82,87],backgroundColor:green,borderRadius:4,barPercentage:0.6},
+        {label:'Pendiente',data:[18,21,16,14,18,13],backgroundColor:'#e8f5ee',borderRadius:4,barPercentage:0.6,borderColor:green,borderWidth:0.5}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11},color:muted}},
+        y:{stacked:true,max:100,grid:{color:'#f5f5f5'},ticks:{font:{size:11},color:muted,callback:function(v){return v+'%'}}}}}
+  });
+  new Chart(document.getElementById('cv-pqrs'), {
+    type:'doughnut',
+    data:{
+      labels:['Mantenimiento','Ruido','Zonas comunes','Seguridad','Otros'],
+      datasets:[{data:[35,22,18,14,11],backgroundColor:[green,green2,green3,'#5DCAA5','#d3d1c7'],borderWidth:0,hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+      plugins:{legend:{display:true,position:'right',labels:{font:{size:11},color:muted,boxWidth:10,padding:8}}}}
+  });
+  new Chart(document.getElementById('cv-reservas'), {
+    type:'line',
+    data:{
+      labels:['Nov','Dic','Ene','Feb','Mar','Abr'],
+      datasets:[
+        {label:'Salón comunal',data:[12,8,14,16,18,20],borderColor:green,backgroundColor:'transparent',tension:0.4,pointRadius:3,pointBackgroundColor:green},
+        {label:'Cancha',data:[8,6,10,12,14,14],borderColor:green2,backgroundColor:'transparent',tension:0.4,pointRadius:3,pointBackgroundColor:green2},
+        {label:'BBQ',data:[4,3,5,6,7,8],borderColor:green3,backgroundColor:'transparent',tension:0.4,pointRadius:3,pointBackgroundColor:green3}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11},color:muted}},y:{grid:{color:'#f5f5f5'},ticks:{font:{size:11},color:muted}}}}
+  });
+})();
+</script>
+
+<section id="como-funciona" class="how-section">
+  <div class="container">
+    <span class="section-tag" id="how-tag">Implementación</span>
+    <h2 class="section-title" id="how-title">Activo en tu copropiedad<br><em>en menos de una semana</em></h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><h4 id="s1t">Diagnóstico</h4><p id="s1p">Conocemos tu copropiedad, número de unidades y procesos actuales.</p></div>
+      <div class="step"><div class="step-num">02</div><h4 id="s2t">Configuración</h4><p id="s2p">Personalizamos ConvivIA con el nombre y datos de tu conjunto o edificio.</p></div>
+      <div class="step"><div class="step-num">03</div><h4 id="s3t">Onboarding</h4><p id="s3p">Vinculamos a los residentes por WhatsApp. El proceso toma minutos por unidad.</p></div>
+      <div class="step"><div class="step-num">04</div><h4 id="s4t">En vivo</h4><p id="s4p">ConvivIA empieza a operar. Soporte continuo incluido.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="container">
+    <h2 class="stats-title" id="stats-title">Construido para la realidad de LATAM</h2>
+    <p class="stats-sub" id="stats-sub">Millones de familias viven en propiedad horizontal en Latinoamérica. La mayoría sigue gestionándose con correos y llamadas.</p>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-num">98%</div><div class="stat-label" id="stat1">de los mensajes de WhatsApp se leen en menos de 3 minutos</div></div>
+      <div class="stat"><div class="stat-num">+80%</div><div class="stat-label" id="stat2">de reducción en tiempo de gestión administrativa</div></div>
+      <div class="stat"><div class="stat-num">24/7</div><div class="stat-label" id="stat3">El agente responde solicitudes sin intervención humana</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <span class="section-tag">Solicitar demo</span>
+      <h2 id="cta-title">¿Listo para transformar tu <em>copropiedad</em>?</h2>
+      <p id="cta-p">Agenda una demo gratuita y te mostramos ConvivIA funcionando en un conjunto real. Sin compromisos.</p>
+      <form id="convivia-form">
+        <input type="text" name="nombre" id="fp-name" placeholder="Tu nombre" required/>
+        <input type="email" name="email" id="fp-email" placeholder="Correo electrónico" required/>
+        <input type="text" name="copropiedad" id="fp-prop" placeholder="Nombre del conjunto o edificio" required/>
+        <input type="text" name="unidades" id="fp-units" placeholder="Número aproximado de unidades"/>
+        <input type="text" name="ciudad" id="fp-city" placeholder="Ciudad, País"/>
+        <button type="submit" id="conv-btn">Solicitar demo gratuita →</button>
+        <div id="conv-success" style="display:none;background:var(--green-dim);border:1px solid var(--green-border);border-radius:8px;padding:1rem;color:var(--green);text-align:center;font-weight:600">✅ ¡Solicitud enviada! Te contactamos en menos de 24 horas.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 44" style="height:36px;width:auto">
+  <g transform="translate(4, 5)">
+    <rect x="0"  y="11" width="6" height="22" fill="#1a7a4a" opacity="0.35" rx="1"/>
+    <rect x="8"  y="5"  width="6" height="28" fill="#1a7a4a" opacity="0.6" rx="1"/>
+    <rect x="16" y="0"  width="9" height="33" fill="#1a7a4a" rx="1"/>
+    <rect x="27" y="6"  width="6" height="27" fill="#1a7a4a" opacity="0.5" rx="1"/>
+    <rect x="18" y="3"  width="2.5" height="2.5" fill="white" opacity="0.7" rx="0.3"/>
+    <rect x="21.5" y="3" width="2.5" height="2.5" fill="white" opacity="0.7" rx="0.3"/>
+    <rect x="18" y="8"  width="2.5" height="2.5" fill="white" opacity="0.7" rx="0.3"/>
+    <rect x="21.5" y="8" width="2.5" height="2.5" fill="white" opacity="0.7" rx="0.3"/>
+    <line x1="-2" y1="33" x2="36" y2="33" stroke="#1a7a4a" stroke-width="1" opacity="0.25"/>
+  </g>
+  <text x="48" y="28" font-family="DM Sans,system-ui,sans-serif" font-size="24" letter-spacing="-0.5">
+    <tspan font-weight="300" fill="#1a2318">Conviv</tspan><tspan font-weight="800" fill="#1a7a4a" letter-spacing="-1">IA</tspan>
+  </text>
+</svg>
+    <a href="https://labgreen.co" style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.85rem">← Volver a LabGreen</a>
+    <p>© 2026 ConvivIA · Un producto de <a href="https://labgreen.co">LabGreen</a> · Todos los derechos reservados</p>
+  </div>
+</footer>
+
+<a href="https://wa.me/573204281408?text=Hola%20ConvivIA%2C%20me%20interesa%20saber%20más%20sobre%20la%20plataforma"
+   target="_blank"
+   style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;width:58px;height:58px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.5);transition:transform 0.2s;text-decoration:none;"
+   onmouseover="this.style.transform='scale(1.12)'"
+   onmouseout="this.style.transform='scale(1)'"
+   title="WhatsApp">
+  <svg viewBox="0 0 24 24" width="30" height="30" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.523 5.845L.057 23.428a.5.5 0 00.609.61l5.737-1.505A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm5.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+</a>
+
+<script>
+document.getElementById('convivia-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var data = {
+    nombre: this.nombre.value,
+    email: this.email.value,
+    copropiedad: this.copropiedad.value,
+    unidades: this.unidades.value,
+    ciudad: this.ciudad.value,
+    producto: 'ConvivIA - Demo request'
+  };
+  fetch('https://formspree.io/f/xqegygyk', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Accept':'application/json'},
+    body: JSON.stringify(data)
+  }).then(function(r) {
+    if(r.ok) {
+      document.getElementById('conv-btn').style.display = 'none';
+      document.getElementById('conv-success').style.display = 'block';
+    }
+  });
+});
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.feature-card,.step').forEach(function(el){
+  el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.5s,transform 0.5s';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
+
+<script>
+var _lang = 'es';
+var _t = {
+  es: {
+    navFeat:'Funcionalidades', navHow:'Cómo funciona', navCont:'Contacto', navCta:'Solicitar demo',
+    navBack:'← LabGreen',
+    badge:'Gestión inteligente por WhatsApp',
+    h1:'La administración de tu copropiedad,<br><em>simple y en WhatsApp</em>',
+    heroP:'ConvivIA es el agente IA que conecta administradores, residentes y consejo de administración en un solo canal. Sin apps, sin correos perdidos, sin complicaciones.',
+    btnDemo:'Solicitar demo gratuita', btnFeat:'Ver funcionalidades →',
+    tagFeat:'Funcionalidades', titleFeat:'Todo lo que necesita tu copropiedad,<br><em>en un solo lugar</em>',
+    subFeat:'Diseñado para administradores que quieren hacer más en menos tiempo, sin depender de correos ni llamadas.',
+    f1t:'Comunicados instantáneos', f1p:'Envía avisos, circulares y alertas a todos los residentes por WhatsApp. Confirmación de lectura automática.',
+    f2t:'Recaudo de cuotas', f2p:'Genera cobros automáticos, envía recordatorios y recibe pagos con link directo desde WhatsApp. Sin perseguir a nadie.',
+    f3t:'PQRS y solicitudes', f3p:'Los residentes escriben por WhatsApp y el sistema registra, clasifica y hace seguimiento de cada solicitud automáticamente.',
+    f4t:'Reservas de zonas comunes', f4p:'Salón comunal, cancha, BBQ — los residentes reservan por WhatsApp y el sistema gestiona disponibilidad en tiempo real.',
+    f5t:'Votaciones y asambleas', f5p:'Realiza votaciones y asambleas digitales con quórum verificado. Actas generadas automáticamente.',
+    f6t:'Reportes automáticos', f6p:'Estado de cartera, ingresos, egresos y novedades — reportes generados automáticamente y enviados al consejo.',
+    waTag:'WhatsApp como canal', waTitle:'Donde ya<br>están tus <em>residentes</em>',
+    waP:'No más apps que nadie descarga. No más correos que nadie lee. ConvivIA opera en el canal que tus residentes ya usan todos los días.',
+    howTag:'Implementación', howTitle:'Activo en tu copropiedad<br><em>en menos de una semana</em>',
+    s1t:'Diagnóstico', s1p:'Conocemos tu copropiedad, número de unidades y procesos actuales.',
+    s2t:'Configuración', s2p:'Personalizamos ConvivIA con el nombre y datos de tu conjunto o edificio.',
+    s3t:'Onboarding', s3p:'Vinculamos a los residentes por WhatsApp. El proceso toma minutos por unidad.',
+    s4t:'En vivo', s4p:'ConvivIA empieza a operar. Soporte continuo incluido.',
+    statsTitle:'Construido para la realidad de LATAM',
+    statsSub:'Millones de familias viven en propiedad horizontal en Latinoamérica. La mayoría sigue gestionándose con correos y llamadas.',
+    stat1:'de los mensajes de WhatsApp se leen en menos de 3 minutos',
+    stat2:'de reducción en tiempo de gestión administrativa',
+    stat3:'El agente responde solicitudes sin intervención humana',
+    ctaTitle:'¿Listo para transformar tu <em>copropiedad</em>?',
+    ctaP:'Agenda una demo gratuita y te mostramos ConvivIA funcionando en un conjunto real. Sin compromisos.',
+    ctaBtn:'Solicitar demo gratuita →',
+    fpName:'Tu nombre', fpEmail:'Correo electrónico', fpProp:'Nombre del conjunto o edificio',
+    fpUnits:'Número aproximado de unidades', fpCity:'Ciudad, País',
+    footerBack:'← Volver a LabGreen',
+    footerTxt:'© 2026 ConvivIA · Un producto de LabGreen · Todos los derechos reservados'
+  },
+  en: {
+    navFeat:'Features', navHow:'How it works', navCont:'Contact', navCta:'Request demo',
+    navBack:'← LabGreen',
+    badge:'Smart management via WhatsApp',
+    h1:'Your community management,<br><em>simple and on WhatsApp</em>',
+    heroP:'ConvivIA is the AI agent that connects administrators, residents and the board in one channel. No apps, no lost emails, no complications.',
+    btnDemo:'Request free demo', btnFeat:'See features →',
+    tagFeat:'Features', titleFeat:'Everything your community needs,<br><em>in one place</em>',
+    subFeat:'Built for administrators who want to do more in less time, without depending on emails or phone calls.',
+    f1t:'Instant announcements', f1p:'Send notices, circulars and alerts to all residents via WhatsApp. Automatic read confirmation.',
+    f2t:'Fee collection', f2p:'Generate automatic charges, send reminders and receive payments with a direct link from WhatsApp. No chasing anyone.',
+    f3t:'Requests and complaints', f3p:'Residents write on WhatsApp and the system records, classifies and tracks each request automatically.',
+    f4t:'Common area bookings', f4p:'Community hall, court, BBQ — residents book via WhatsApp and the system manages availability in real time.',
+    f5t:'Votes and assemblies', f5p:'Conduct digital votes and assemblies with verified quorum. Minutes generated automatically.',
+    f6t:'Automatic reports', f6p:'Portfolio status, income, expenses and updates — reports generated automatically and sent to the board.',
+    waTag:'WhatsApp first', waTitle:'Where your<br><em>residents</em> already are',
+    waP:'No more apps nobody downloads. No more emails nobody reads. ConvivIA runs on the channel your residents use every day.',
+    howTag:'Implementation', howTitle:'Live in your community<br><em>in less than a week</em>',
+    s1t:'Diagnosis', s1p:'We learn about your community, number of units and current processes.',
+    s2t:'Setup', s2p:'We customize ConvivIA with your building or complex name and data.',
+    s3t:'Onboarding', s3p:'We connect residents via WhatsApp. The process takes minutes per unit.',
+    s4t:'Go live', s4p:'ConvivIA starts operating. Continuous support included.',
+    statsTitle:'Built for Latin Americas reality',
+    statsSub:'Millions of families live in residential communities across Latin America. Most are still managed via emails and phone calls.',
+    stat1:'of WhatsApp messages are read within 3 minutes',
+    stat2:'reduction in administrative management time',
+    stat3:'The agent responds to requests without human intervention',
+    ctaTitle:'Ready to transform your <em>community</em>?',
+    ctaP:'Schedule a free demo and we will show you ConvivIA running in a real community. No commitments.',
+    ctaBtn:'Request free demo →',
+    fpName:'Your name', fpEmail:'Email address', fpProp:'Building or complex name',
+    fpUnits:'Approximate number of units', fpCity:'City, Country',
+    footerBack:'← Back to LabGreen',
+    footerTxt:'© 2026 ConvivIA · A LabGreen product · All rights reserved'
+  }
+};
+
+function g(id){ return document.getElementById(id); }
+function s(id,v){ var e=g(id); if(e) e.innerHTML=v; }
+function t(id,v){ var e=g(id); if(e) e.textContent=v; }
+function p(id,v){ var e=g(id); if(e) e.placeholder=v; }
+
+function applyLang(l) {
+  _lang = l;
+  localStorage.setItem('cv-lang', l);
+  var tr = _t[l];
+  g('lang-toggle').textContent = l==='es'?'EN':'ES';
+  t('nav-feat', tr.navFeat); t('nav-how', tr.navHow); t('nav-cont', tr.navCont);
+  t('nav-cta-btn', tr.navCta);
+  t('badge-txt', tr.badge);
+  s('hero-h1', tr.h1); t('hero-p', tr.heroP);
+  t('btn-demo', tr.btnDemo); t('btn-feat', tr.btnFeat);
+  t('tag-feat', tr.tagFeat); s('title-feat', tr.titleFeat); t('sub-feat', tr.subFeat);
+  t('f1t', tr.f1t); t('f1p', tr.f1p); t('f2t', tr.f2t); t('f2p', tr.f2p);
+  t('f3t', tr.f3t); t('f3p', tr.f3p); t('f4t', tr.f4t); t('f4p', tr.f4p);
+  t('f5t', tr.f5t); t('f5p', tr.f5p); t('f6t', tr.f6t); t('f6p', tr.f6p);
+  t('wa-tag', tr.waTag); s('wa-title', tr.waTitle); t('wa-p', tr.waP);
+  t('how-tag', tr.howTag); s('how-title', tr.howTitle);
+  t('s1t', tr.s1t); t('s1p', tr.s1p); t('s2t', tr.s2t); t('s2p', tr.s2p);
+  t('s3t', tr.s3t); t('s3p', tr.s3p); t('s4t', tr.s4t); t('s4p', tr.s4p);
+  s('stats-title', tr.statsTitle); t('stats-sub', tr.statsSub);
+  t('stat1', tr.stat1); t('stat2', tr.stat2); t('stat3', tr.stat3);
+  s('cta-title', tr.ctaTitle); t('cta-p', tr.ctaP); t('conv-btn', tr.ctaBtn);
+  p('fp-name', tr.fpName); p('fp-email', tr.fpEmail); p('fp-prop', tr.fpProp);
+  p('fp-units', tr.fpUnits); p('fp-city', tr.fpCity);
+}
+
+function toggleLang() { applyLang(_lang==='es'?'en':'es'); }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('cv-lang');
+  var browser = (navigator.language||'es').startsWith('en')?'en':'es';
+  applyLang(saved||browser);
+  document.getElementById('lang-toggle').addEventListener('click', function() {
+    applyLang(_lang==='es'?'en':'es');
+  });
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e){ if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';} });
+  },{threshold:0.1});
+  document.querySelectorAll('.feature-card,.step').forEach(function(el){
+    el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.5s,transform 0.5s';
+    obs.observe(el);
+  });
+});
+</script>
